@@ -1,7 +1,7 @@
 @extends('layouts.master')
 @include('partials.datatable-assets')
 @section('template_title')
-    Sections
+    {{ __('app.sections') }}
 @endsection
 
 @section('content')
@@ -13,7 +13,7 @@
                         <div style="display: flex; justify-content: space-between; align-items: center;">
 
                             <span id="card_title">
-                                {{ __('Sections') }}
+                               {{ trans('app.sections') }}
                             </span>
 
                              <div class="float-right">
