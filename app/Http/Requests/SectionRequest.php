@@ -23,6 +23,8 @@ class SectionRequest extends FormRequest
     {
         return [
 			'name' => 'required|string',
+            'description' => 'nullable|string',
+            'created_by' => 'nullable|string|max:999',
         ];
     }
 }

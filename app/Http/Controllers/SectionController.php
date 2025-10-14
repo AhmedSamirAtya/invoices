@@ -16,10 +16,9 @@ class SectionController extends Controller
      */
     public function index(Request $request): View
     {
-        $sections = Section::paginate();
+        $sections = Section::all();
 
-        return view('section.index', compact('sections'))
-            ->with('i', ($request->input('page', 1) - 1) * $sections->perPage());
+        return view('section.index', compact('sections'));
     }
 
     /**

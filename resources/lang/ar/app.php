@@ -34,4 +34,10 @@ return [
     'settings'=>'الإعدادات',
     'reports'=>'التقارير',
     'home'=>'الرئيسية',
+    'description'=>'الوصف',
+    'name'=>'الاسم',
+    'created_by'=>'أنشأ بواسطة',
+    'confirm_delete'=>'هل أنت متأكد من حذف هذا؟',
+    'confirm'=> 'تأكيد',
+    'cancel'=> 'إلغاء',
 ];

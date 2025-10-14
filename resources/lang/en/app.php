@@ -33,4 +33,10 @@ return [
     'settings'=>'Settings',
     'reports'=>'Reports',
     'home'=>'Home',
+    'description'=>'Description',
+    'name'=>'Name',
+    'created_by'=>'Created By',
+    'confirm_delete'=>'Are you sure you want to delete this?',
+    'confirm'=> 'Confirm',
+    'cancel'=> 'Cancel',
 ];

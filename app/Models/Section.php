@@ -9,6 +9,8 @@ use Illuminate\Database\Eloquent\Model;
  *
  * @property $id
  * @property $name
+ * @property $description
+ * @property $created_by
  * @property $created_at
  * @property $updated_at
  *
@@ -18,7 +20,7 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Section extends Model
 {
-    
+
     protected $perPage = 20;
 
     /**
@@ -26,7 +28,7 @@ class Section extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['name', 'description', 'created_by'];
 
 
     /**
@@ -36,5 +38,5 @@ class Section extends Model
     {
         return $this->hasMany(\App\Models\Invoice::class, 'id', 'section_id');
     }
-    
+
 }
