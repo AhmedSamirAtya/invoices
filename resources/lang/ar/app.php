@@ -41,4 +41,7 @@ return [
     'confirm'=> 'تأكيد',
     'cancel'=> 'إلغاء',
     'success' => 'تمت العملية بنجاح',
+    'choose' => 'اختر',
+    'section' => 'القسم',
+    'product' => 'المنتج',
 ];

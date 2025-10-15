@@ -40,4 +40,7 @@ return [
     'confirm'=> 'Confirm',
     'cancel'=> 'Cancel',
     'success' => 'Operation completed successfully',
+    'choose' => 'Choose',
+    'section' => 'Section',
+    'product' => 'Product',
 ];
