@@ -6,14 +6,18 @@ use App\Models\Invoice;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\InvoiceRequest;
+use App\Models\InvoiceAttachment;
+use App\Models\InvoiceDetails;
+use App\Models\Section;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
 class InvoiceController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index(Request $request): View
     {
         $invoices = Invoice::paginate();
@@ -22,25 +26,77 @@ class InvoiceController extends Controller
             ->with('i', ($request->input('page', 1) - 1) * $invoices->perPage());
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
+
     public function create(): View
     {
-        $invoice = new Invoice();
-
-        return view('invoice.create', compact('invoice'));
+        $sections = Section::all();
+        return view('invoice.add_invoice', compact('sections'));
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(InvoiceRequest $request): RedirectResponse
+    public function store(Request $request): RedirectResponse
     {
-        Invoice::create($request->validated());
+        $invoice =Invoice::create([
+            'invoice_number' => 'INV-'.$request->invoice_number,
+            'invoice_Date' => $request->invoice_Date,
+            'Due_date' => $request->Due_date,
+            'product' => $request->product,
+            'section_id' => $request->section_id,
+            'Amount_collection' => $request->Amount_collection,
+            'Amount_Commission' => $request->Amount_Commission,
+            'Discount' => $request->Discount,
+            'Value_VAT' => $request->Value_VAT,
+            'Rate_VAT' => $request->Rate_VAT,
+            'Total' => $request->Total,
+            'Status' => 'غير مدفوعة',
+            'Value_Status' => 2,
+            'note' => $request->note,
+        ]);
 
-        return Redirect::route('invoices.index')
-            ->with('success', 'Invoice created successfully.');
+        InvoiceDetails::create([
+            'id_Invoice' => $invoice->id,
+            'invoice_number' => $request->invoice_number,
+            'product' => $request->product,
+            'Section' => $invoice->section->name,
+            'Status' => 'غير مدفوعة',
+            'Value_Status' => 2,
+            'note' => $request->note,
+            'user' => (Auth::user()->name),
+        ]);
+
+        if ($request->hasFile('pic')) {
+
+            $image = $request->file('pic');
+            $file_name = $image->getClientOriginalName();
+            $invoice_number = $request->invoice_number;
+
+            $attachments = new InvoiceAttachment();
+            $attachments->file_name = $file_name;
+            $attachments->invoice_number = $invoice_number;
+            $attachments->Created_by = Auth::user()->name;
+            $attachments->invoice_id = $invoice->id;
+            $attachments->save();
+
+            // move pic
+            //$imageName = $request->pic->getClientOriginalName();
+            $imageName = uniqid() . '.' . $request->pic->getClientOriginalExtension();
+            $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
+        }
+
+
+           // $user = User::first();
+           // Notification::send($user, new AddInvoice($invoice_id));
+
+        // $user = User::get();
+        // $invoices = Invoice::latest()->first();
+        // Notification::send($user, new \App\Notifications\Add_invoice_new($invoices));
+
+        // event(new MyEventClass('hello world'));
+
+        session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
+        return back();
     }
 
     /**
@@ -80,5 +136,11 @@ class InvoiceController extends Controller
 
         return Redirect::route('invoices.index')
             ->with('success', 'Invoice deleted successfully');
+    }
+
+    public function getproducts($id)
+    {
+        $products = DB::table("products")->where("section_id", $id)->pluck("name", "id");
+        return json_encode($products);
     }
 }

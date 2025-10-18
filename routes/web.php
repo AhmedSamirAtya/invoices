@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminController;
 use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SectionController;
@@ -13,7 +14,9 @@ Auth::routes(/*['register' => false]*/);
 Route::resource('sections', SectionController::class);
 Route::resource('invoices', InvoiceController::class);
 Route::resource('products', ProductController::class);
-Route::get('/{page}', [App\Http\Controllers\AdminController::class, 'index']);
+Route::get('section/{id}', [InvoiceController::class, 'getproducts']);
+Route::get('/{page}', [AdminController::class, 'index']);
+
 Route::get('/', function () {
     return view('auth.login');
 });

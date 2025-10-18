@@ -4,96 +4,272 @@
     {{ trans('app.invoices') }}
 @endsection
 
+@section('page-header')
+    <!-- breadcrumb -->
+    <div class="breadcrumb-header justify-content-between">
+        <div class="my-auto">
+            <div class="d-flex">
+                <h4 class="content-title mb-0 my-auto">الفواتير</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ قائمة
+                    الفواتير</span>
+            </div>
+        </div>
+
+    </div>
+    <!-- breadcrumb -->
+@endsection
 @section('content')
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-sm-12">
-                <div class="card">
-                    <div class="card-header">
-                        <div style="display: flex; justify-content: space-between; align-items: center;">
 
-                            <span id="card_title">
-                                {{ trans('app.invoices') }}
-                            </span>
+    @if (session()->has('delete_invoice'))
+        <script>
+            window.onload = function() {
+                notif({
+                    msg: "تم حذف الفاتورة بنجاح",
+                    type: "success"
+                })
+            }
 
-                             <div class="float-right">
-                                <a href="{{ route('invoices.create') }}" class="btn btn-primary btn-sm float-right"  data-placement="left">
-                                  {{ __('Create New') }}
-                                </a>
-                              </div>
-                        </div>
-                    </div>
-                    @if ($message = Session::get('success'))
-                        <div class="alert alert-success m-4">
-                            <p>{{ $message }}</p>
-                        </div>
-                    @endif
+        </script>
+    @endif
 
-                    <div class="card-body bg-white">
-                        <div class="table-responsive">
-                           <table id="example" class="table key-buttons text-md-nowrap">
-                                <thead class="thead">
+
+    @if (session()->has('Status_Update'))
+        <script>
+            window.onload = function() {
+                notif({
+                    msg: "تم تحديث حالة الدفع بنجاح",
+                    type: "success"
+                })
+            }
+
+        </script>
+    @endif
+
+    @if (session()->has('restore_invoice'))
+        <script>
+            window.onload = function() {
+                notif({
+                    msg: "تم استعادة الفاتورة بنجاح",
+                    type: "success"
+                })
+            }
+
+        </script>
+    @endif
+
+
+    <!-- row -->
+    <div class="row">
+        <!--div-->
+        <div class="col-xl-12">
+            <div class="card mg-b-20">
+                <div class="card-header pb-0">
+                    {{-- @can('اضافة فاتورة') --}}
+                        <a href="invoices/create" class="modal-effect btn btn-sm btn-primary" style="color:white"><i
+                                class="fas fa-plus"></i>&nbsp; اضافة فاتورة</a>
+                    {{-- @endcan --}}
+
+                    {{-- @can('تصدير EXCEL') --}}
+                        <a class="modal-effect btn btn-sm btn-primary" href="{{ url('export_invoices') }}"
+                            style="color:white"><i class="fas fa-file-download"></i>&nbsp;تصدير اكسيل</a>
+                    {{-- @endcan --}}
+
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="example1" class="table key-buttons text-md-nowrap" data-page-length='50'style="text-align: center">
+                            <thead>
+                                <tr>
+                                    <th class="border-bottom-0">#</th>
+                                    <th class="border-bottom-0">رقم الفاتورة</th>
+                                    <th class="border-bottom-0">تاريخ القاتورة</th>
+                                    <th class="border-bottom-0">تاريخ الاستحقاق</th>
+                                    <th class="border-bottom-0">المنتج</th>
+                                    <th class="border-bottom-0">القسم</th>
+                                    <th class="border-bottom-0">الخصم</th>
+                                    <th class="border-bottom-0">نسبة الضريبة</th>
+                                    <th class="border-bottom-0">قيمة الضريبة</th>
+                                    <th class="border-bottom-0">الاجمالي</th>
+                                    <th class="border-bottom-0">الحالة</th>
+                                    <th class="border-bottom-0">ملاحظات</th>
+                                    <th class="border-bottom-0">العمليات</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @php
+                                $i = 0;
+                                @endphp
+                                @foreach ($invoices as $invoice)
+                                    @php
+                                    $i++
+                                    @endphp
                                     <tr>
-                                        <th>No</th>
+                                        <td>{{ $i }}</td>
+                                        <td>{{ $invoice->invoice_number }} </td>
+                                        <td>{{ $invoice->invoice_Date }}</td>
+                                        <td>{{ $invoice->Due_date }}</td>
+                                        <td>{{ $invoice->product }}</td>
+                                        <td><a
+                                                href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->name }}</a>
+                                        </td>
+                                        <td>{{ $invoice->Discount }}</td>
+                                        <td>{{ $invoice->Rate_VAT }}</td>
+                                        <td>{{ $invoice->Value_VAT }}</td>
+                                        <td>{{ $invoice->Total }}</td>
+                                        <td>
+                                            @if ($invoice->Value_Status == 1)
+                                                <span class="text-success">{{ $invoice->Status }}</span>
+                                            @elseif($invoice->Value_Status == 2)
+                                                <span class="text-danger">{{ $invoice->Status }}</span>
+                                            @else
+                                                <span class="text-warning">{{ $invoice->Status }}</span>
+                                            @endif
 
-									<th >Invoice Number</th>
-									<th >Invoice Date</th>
-									<th >Due Date</th>
-									<th >Product</th>
-									<th >Section Id</th>
-									<th >Amount Collection</th>
-									<th >Amount Commission</th>
-									<th >Discount</th>
-									<th >Value Vat</th>
-									<th >Rate Vat</th>
-									<th >Total</th>
-									<th >Status</th>
-									<th >Value Status</th>
-									<th >Note</th>
-									<th >Payment Date</th>
+                                        </td>
 
-                                        <th></th>
+                                        <td>{{ $invoice->note }}</td>
+                                        <td>
+                                            <div class="dropdown">
+                                                <button aria-expanded="false" aria-haspopup="true"
+                                                    class="btn ripple btn-primary btn-sm" data-toggle="dropdown"
+                                                    type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
+                                                <div class="dropdown-menu tx-13">
+                                                    {{-- @can('تعديل الفاتورة') --}}
+                                                        <a class="dropdown-item"
+                                                            href=" {{ url('edit_invoice') }}/{{ $invoice->id }}">تعديل
+                                                            الفاتورة</a>
+                                                    {{-- @endcan --}}
+
+                                                    {{-- @can('حذف الفاتورة') --}}
+                                                        <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+                                                            data-toggle="modal" data-target="#delete_invoice"><i
+                                                                class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف
+                                                            الفاتورة</a>
+                                                    {{-- @endcan --}}
+
+                                                    {{-- @can('تغير حالة الدفع') --}}
+                                                        {{-- <a class="dropdown-item"
+                                                            href="{{ URL::route('Status_show', [$invoice->id]) }}"><i
+                                                                class=" text-success fas
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    fa-money-bill"></i>&nbsp;&nbsp;تغير
+                                                            حالة
+                                                            الدفع</a> --}}
+                                                    {{-- @endcan --}}
+
+                                                    {{-- @can('ارشفة الفاتورة') --}}
+                                                        {{-- <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+                                                            data-toggle="modal" data-target="#Transfer_invoice"><i
+                                                                class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp;نقل الي
+                                                            الارشيف</a> --}}
+                                                    {{-- @endcan --}}
+
+                                                    {{-- @can('طباعةالفاتورة') --}}
+                                                        {{-- <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
+                                                                class="text-success fas fa-print"></i>&nbsp;&nbsp;طباعة
+                                                            الفاتورة
+                                                        </a> --}}
+                                                    {{-- @endcan --}}
+                                                </div>
+                                            </div>
+
+                                        </td>
                                     </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach ($invoices as $invoice)
-                                        <tr>
-                                            <td>{{ ++$i }}</td>
+                                @endforeach
 
-										<td >{{ $invoice->invoice_number }}</td>
-										<td >{{ $invoice->invoice_Date }}</td>
-										<td >{{ $invoice->Due_date }}</td>
-										<td >{{ $invoice->product }}</td>
-										<td >{{ $invoice->section_id }}</td>
-										<td >{{ $invoice->Amount_collection }}</td>
-										<td >{{ $invoice->Amount_Commission }}</td>
-										<td >{{ $invoice->Discount }}</td>
-										<td >{{ $invoice->Value_VAT }}</td>
-										<td >{{ $invoice->Rate_VAT }}</td>
-										<td >{{ $invoice->Total }}</td>
-										<td >{{ $invoice->Status }}</td>
-										<td >{{ $invoice->Value_Status }}</td>
-										<td >{{ $invoice->note }}</td>
-										<td >{{ $invoice->Payment_Date }}</td>
-
-                                            <td>
-                                                <form action="{{ route('invoices.destroy', $invoice->id) }}" method="POST">
-                                                    <a class="btn btn-sm btn-primary " href="{{ route('invoices.show', $invoice->id) }}"><i class="fa fa-fw fa-eye"></i> {{ __('Show') }}</a>
-                                                    <a class="btn btn-sm btn-success" href="{{ route('invoices.edit', $invoice->id) }}"><i class="fa fa-fw fa-edit"></i> {{ __('Edit') }}</a>
-                                                    @csrf
-                                                    @method('DELETE')
-                                                    <button type="submit" class="btn btn-danger btn-sm" onclick="event.preventDefault(); confirm('Are you sure to delete?') ? this.closest('form').submit() : false;"><i class="fa fa-fw fa-trash"></i> {{ __('Delete') }}</button>
-                                                </form>
-                                            </td>
-                                        </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        </div>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                {!! $invoices->withQueryString()->links() !!}
+            </div>
+        </div>
+        <!--/div-->
+    </div>
+
+    <!-- حذف الفاتورة -->
+    <div class="modal fade" id="delete_invoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">حذف الفاتورة</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <form action="{{ route('invoices.destroy', 'test') }}" method="post">
+                        {{ method_field('delete') }}
+                        {{ csrf_field() }}
+                </div>
+                <div class="modal-body">
+                    هل انت متاكد من عملية الحذف ؟
+                    <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                    <button type="submit" class="btn btn-danger">تاكيد</button>
+                </div>
+                </form>
             </div>
         </div>
     </div>
+
+
+    <!-- ارشيف الفاتورة -->
+    <div class="modal fade" id="Transfer_invoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">ارشفة الفاتورة</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <form action="{{ route('invoices.destroy', 'test') }}" method="post">
+                        {{ method_field('delete') }}
+                        {{ csrf_field() }}
+                </div>
+                <div class="modal-body">
+                    هل انت متاكد من عملية الارشفة ؟
+                    <input type="hidden" name="invoice_id" id="invoice_id" value="">
+                    <input type="hidden" name="id_page" id="id_page" value="2">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                    <button type="submit" class="btn btn-success">تاكيد</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <!-- row closed -->
+    </div>
+    <!-- Container closed -->
+    </div>
+    <!-- main-content closed -->
+@endsection
+@section('js')
+    <!--Internal  Notify js -->
+    <script src="{{ URL::asset('assets/plugins/notify/js/notifIt.js') }}"></script>
+    <script src="{{ URL::asset('assets/plugins/notify/js/notifit-custom.js') }}"></script>
+
+    <script>
+        $('#delete_invoice').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var invoice_id = button.data('invoice_id')
+            var modal = $(this)
+            modal.find('.modal-body #invoice_id').val(invoice_id);
+        })
+
+    </script>
+
+    <script>
+        $('#Transfer_invoice').on('show.bs.modal', function(event) {
+            var button = $(event.relatedTarget)
+            var invoice_id = button.data('invoice_id')
+            var modal = $(this)
+            modal.find('.modal-body #invoice_id').val(invoice_id);
+        })
+
+    </script>
 @endsection
