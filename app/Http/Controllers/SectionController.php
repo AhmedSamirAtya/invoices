@@ -6,6 +6,7 @@ use App\Models\Section;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\SectionRequest;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
 
@@ -16,7 +17,7 @@ class SectionController extends Controller
      */
     public function index(Request $request): View
     {
-        $sections = Section::all();
+        $sections = Section::get();
 
         return view('section.index', compact('sections'));
     }
@@ -36,7 +37,9 @@ class SectionController extends Controller
      */
     public function store(SectionRequest $request): RedirectResponse
     {
-        Section::create($request->validated());
+        $params = $request->validated();
+        $params['user_id'] = Auth::id();
+        Section::create($params);
 
         return Redirect::route('sections.index')
             ->with('success', trans('app.success'));

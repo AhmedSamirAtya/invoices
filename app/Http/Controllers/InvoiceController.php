@@ -39,43 +39,33 @@ class InvoiceController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $invoice =Invoice::create([
-            'invoice_number' => 'INV-'.$request->invoice_number,
-            'invoice_Date' => $request->invoice_Date,
-            'Due_date' => $request->Due_date,
-            'product' => $request->product,
+            'product_id' => $request->product_id,
             'section_id' => $request->section_id,
-            'Amount_collection' => $request->Amount_collection,
-            'Amount_Commission' => $request->Amount_Commission,
-            'Discount' => $request->Discount,
-            'Value_VAT' => $request->Value_VAT,
-            'Rate_VAT' => $request->Rate_VAT,
-            'Total' => $request->Total,
-            'Status' => 'غير مدفوعة',
-            'Value_Status' => 2,
-            'note' => $request->note,
+            'user_id' => Auth::id(),
         ]);
 
         InvoiceDetails::create([
-            'id_Invoice' => $invoice->id,
+            'invoice_id' => $invoice->id,
             'invoice_number' => $request->invoice_number,
-            'product' => $request->product,
-            'Section' => $invoice->section->name,
-            'Status' => 'غير مدفوعة',
-            'Value_Status' => 2,
+            'invoice_date' => $request->invoice_date,
+            'due_date' => $request->due_date,
+            'amount_collection' => $request->amount_collection,
+            'amount_Commission' => $request->amount_Commission,
+            'discount' => $request->discount,
+            'value_vat' => $request->value_vat,
+            'rate_vat' => $request->rate_vat,
+            'total' => $request->total,
+            'status' => 'unpaied',
             'note' => $request->note,
-            'user' => (Auth::user()->name),
         ]);
 
         if ($request->hasFile('pic')) {
-
             $image = $request->file('pic');
             $file_name = $image->getClientOriginalName();
             $invoice_number = $request->invoice_number;
 
             $attachments = new InvoiceAttachment();
             $attachments->file_name = $file_name;
-            $attachments->invoice_number = $invoice_number;
-            $attachments->Created_by = Auth::user()->name;
             $attachments->invoice_id = $invoice->id;
             $attachments->save();
 

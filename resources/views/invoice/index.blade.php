@@ -104,29 +104,29 @@
                                     @endphp
                                     <tr>
                                         <td>{{ $i }}</td>
-                                        <td>{{ $invoice->invoice_number }} </td>
-                                        <td>{{ $invoice->invoice_Date }}</td>
-                                        <td>{{ $invoice->Due_date }}</td>
-                                        <td>{{ $invoice->product }}</td>
+                                        <td>{{ $invoice->details->invoice_number }} </td>
+                                        <td>{{ $invoice->details->invoice_date }}</td>
+                                        <td>{{ $invoice->details->due_date }}</td>
+                                        <td>{{ $invoice->product->name }}</td>
                                         <td><a
                                                 href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->name }}</a>
                                         </td>
-                                        <td>{{ $invoice->Discount }}</td>
-                                        <td>{{ $invoice->Rate_VAT }}</td>
-                                        <td>{{ $invoice->Value_VAT }}</td>
-                                        <td>{{ $invoice->Total }}</td>
-                                        <td>
+                                        <td>{{ $invoice->details->Discount }}</td>
+                                        <td>{{ $invoice->details->Rate_VAT }}</td>
+                                        <td>{{ $invoice->details->Value_VAT }}</td>
+                                        <td>{{ $invoice->details->Total }}</td>
+                                        {{-- <td>
                                             @if ($invoice->Value_Status == 1)
                                                 <span class="text-success">{{ $invoice->Status }}</span>
                                             @elseif($invoice->Value_Status == 2)
                                                 <span class="text-danger">{{ $invoice->Status }}</span>
                                             @else
                                                 <span class="text-warning">{{ $invoice->Status }}</span>
-                                            @endif
+                                            @endif --}}
 
-                                        </td>
-
-                                        <td>{{ $invoice->note }}</td>
+                                        {{-- </td> --}}
+                                            <td>{{ $invoice->details->status }}</td>
+                                        <td>{{ $invoice->details->note }}</td>
                                         <td>
                                             <div class="dropdown">
                                                 <button aria-expanded="false" aria-haspopup="true"

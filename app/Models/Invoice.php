@@ -5,33 +5,6 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-/**
- * Class Invoice
- *
- * @property $id
- * @property $invoice_number
- * @property $invoice_Date
- * @property $Due_date
- * @property $product
- * @property $section_id
- * @property $Amount_collection
- * @property $Amount_Commission
- * @property $Discount
- * @property $Value_VAT
- * @property $Rate_VAT
- * @property $Total
- * @property $Status
- * @property $Value_Status
- * @property $note
- * @property $Payment_Date
- * @property $deleted_at
- * @property $created_at
- * @property $updated_at
- *
- * @property Section $section
- * @package App
- * @mixin \Illuminate\Database\Eloquent\Builder
- */
 class Invoice extends Model
 {
     use SoftDeletes;
@@ -43,15 +16,25 @@ class Invoice extends Model
      *
      * @var array<int, string>
      */
-    protected $fillable = ['invoice_number', 'invoice_Date', 'Due_date', 'product', 'section_id', 'Amount_collection', 'Amount_Commission', 'Discount', 'Value_VAT', 'Rate_VAT', 'Total', 'Status', 'Value_Status', 'note', 'Payment_Date'];
+    protected $fillable = ['product_id', 'section_id', 'user_id'];
 
-
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
     public function section()
     {
         return $this->belongsTo(\App\Models\Section::class, 'section_id', 'id');
     }
-    
+
+    public function product()
+    {
+        return $this->belongsTo(\App\Models\Product::class, 'product_id', 'id');
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
+    }
+
+    public function details(){
+        return $this->hasOne(\App\Models\InvoiceDetails::class, 'invoice_id', 'id');
+    }
+
 }

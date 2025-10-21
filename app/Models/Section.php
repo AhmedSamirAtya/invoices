@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
  * @property $id
  * @property $name
  * @property $description
- * @property $created_by
+ * @property $user_id
  * @property $created_at
  * @property $updated_at
  *
@@ -23,20 +23,18 @@ class Section extends Model
 
     protected $perPage = 20;
 
-    /**
-     * The attributes that are mass assignable.
-     *
-     * @var array<int, string>
-     */
-    protected $fillable = ['name', 'description', 'created_by'];
+
+    protected $fillable = ['name', 'description', 'user_id'];
 
 
-    /**
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
+
     public function invoices()
     {
         return $this->hasMany(\App\Models\Invoice::class, 'id', 'section_id');
+    }
+
+    public function user(){
+        return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 
 }

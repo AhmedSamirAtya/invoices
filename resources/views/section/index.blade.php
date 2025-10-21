@@ -72,7 +72,7 @@
                                     <td>{{ $x->id }}</td>
                                     <td>{{ $x->name }}</td>
                                     <td>{{ $x->description }}</td>
-                                    <td>{{ $x->created_by }}</td>
+                                    <td>{{ $x->user->name }}</td>
                                     <td>
                                         {{-- @can('تعديل قسم') --}}
                                             <a class="modal-effect btn btn-sm btn-info" data-effect="effect-scale"
