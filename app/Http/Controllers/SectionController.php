@@ -17,7 +17,7 @@ class SectionController extends Controller
      */
     public function index(Request $request): View
     {
-        $sections = Section::get();
+        $sections = Section::with('user')->get();
 
         return view('section.index', compact('sections'));
     }

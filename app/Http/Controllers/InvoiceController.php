@@ -20,10 +20,9 @@ class InvoiceController extends Controller
 {
     public function index(Request $request): View
     {
-        $invoices = Invoice::paginate();
+        $invoices = Invoice::with(['details','product'])->get();
 
-        return view('invoice.index', compact('invoices'))
-            ->with('i', ($request->input('page', 1) - 1) * $invoices->perPage());
+        return view('invoice.index', compact('invoices'));
     }
 
 
@@ -50,12 +49,12 @@ class InvoiceController extends Controller
             'invoice_date' => $request->invoice_date,
             'due_date' => $request->due_date,
             'amount_collection' => $request->amount_collection,
-            'amount_Commission' => $request->amount_Commission,
+            'amount_commission' => $request->amount_commission,
             'discount' => $request->discount,
             'value_vat' => $request->value_vat,
             'rate_vat' => $request->rate_vat,
             'total' => $request->total,
-            'status' => 'unpaied',
+            'status' => 'unpaid',
             'note' => $request->note,
         ]);
 

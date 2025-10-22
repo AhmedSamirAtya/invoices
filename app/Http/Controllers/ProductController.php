@@ -17,10 +17,9 @@ class ProductController extends Controller
      */
     public function index(Request $request): View
     {
-        $products = Product::paginate();
-         $sections = Section::all();
-        return view('product.index', compact('products', 'sections'))
-            ->with('i', ($request->input('page', 1) - 1) * $products->perPage());
+        $products = Product::with('section')->get();
+        $sections = Section::all();
+        return view('product.index', compact('products', 'sections'));
     }
 
     /**

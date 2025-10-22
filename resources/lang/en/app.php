@@ -43,4 +43,6 @@ return [
     'choose' => 'Choose',
     'section' => 'Section',
     'product' => 'Product',
+    'unpaid' => 'Unpaid',
+    'paid' => 'Paid',
 ];

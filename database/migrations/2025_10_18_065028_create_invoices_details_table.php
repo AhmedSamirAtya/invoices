@@ -26,7 +26,7 @@ class CreateInvoicesDetailsTable extends Migration
             $table->decimal('value_vat',8,2);
             $table->string('rate_vat', 999);
             $table->decimal('total',8,2);
-            $table->enum('status', ['paied', 'unpaied']);
+            $table->enum('status', ['paid', 'unpaid']);
             $table->text('note')->nullable();
             $table->date('payment_date')->nullable();
             $table->timestamps();

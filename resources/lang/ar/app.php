@@ -44,4 +44,6 @@ return [
     'choose' => 'اختر',
     'section' => 'القسم',
     'product' => 'المنتج',
+    'unpaid' => 'غير مدفوع',
+    'paid' => 'مدفوع',
 ];

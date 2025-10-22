@@ -18,7 +18,6 @@
     <!-- breadcrumb -->
 @endsection
 @section('content')
-
     @if (session()->has('delete_invoice'))
         <script>
             window.onload = function() {
@@ -27,7 +26,6 @@
                     type: "success"
                 })
             }
-
         </script>
     @endif
 
@@ -40,7 +38,6 @@
                     type: "success"
                 })
             }
-
         </script>
     @endif
 
@@ -52,7 +49,6 @@
                     type: "success"
                 })
             }
-
         </script>
     @endif
 
@@ -64,19 +60,20 @@
             <div class="card mg-b-20">
                 <div class="card-header pb-0">
                     {{-- @can('اضافة فاتورة') --}}
-                        <a href="invoices/create" class="modal-effect btn btn-sm btn-primary" style="color:white"><i
-                                class="fas fa-plus"></i>&nbsp; اضافة فاتورة</a>
+                    <a href="invoices/create" class="modal-effect btn btn-sm btn-primary" style="color:white"><i
+                            class="fas fa-plus"></i>&nbsp; اضافة فاتورة</a>
                     {{-- @endcan --}}
 
                     {{-- @can('تصدير EXCEL') --}}
-                        <a class="modal-effect btn btn-sm btn-primary" href="{{ url('export_invoices') }}"
-                            style="color:white"><i class="fas fa-file-download"></i>&nbsp;تصدير اكسيل</a>
+                    <a class="modal-effect btn btn-sm btn-primary" href="{{ url('export_invoices') }}"
+                        style="color:white"><i class="fas fa-file-download"></i>&nbsp;تصدير اكسيل</a>
                     {{-- @endcan --}}
 
                 </div>
                 <div class="card-body">
                     <div class="table-responsive">
-                        <table id="example1" class="table key-buttons text-md-nowrap" data-page-length='50'style="text-align: center">
+                        <table id="example1" class="table key-buttons text-md-nowrap"
+                            data-page-length='50'style="text-align: center">
                             <thead>
                                 <tr>
                                     <th class="border-bottom-0">#</th>
@@ -96,25 +93,26 @@
                             </thead>
                             <tbody>
                                 @php
-                                $i = 0;
+                                    $i = 0;
                                 @endphp
                                 @foreach ($invoices as $invoice)
                                     @php
-                                    $i++
+                                        $i++;
+
                                     @endphp
                                     <tr>
                                         <td>{{ $i }}</td>
-                                        <td>{{ $invoice->details->invoice_number }} </td>
-                                        <td>{{ $invoice->details->invoice_date }}</td>
-                                        <td>{{ $invoice->details->due_date }}</td>
+                                        <td>{{ $invoice->details?->invoice_number }} </td>
+                                        <td>{{ $invoice->details?->invoice_date }}</td>
+                                        <td>{{ $invoice->details?->due_date }}</td>
                                         <td>{{ $invoice->product->name }}</td>
                                         <td><a
-                                                href="{{ url('InvoicesDetails') }}/{{ $invoice->id }}">{{ $invoice->section->name }}</a>
+                                                href="{{ url('InvoicesDetails') }}/{{ $invoice->details?->id }}">{{ $invoice->section->name }}</a>
                                         </td>
-                                        <td>{{ $invoice->details->Discount }}</td>
-                                        <td>{{ $invoice->details->Rate_VAT }}</td>
-                                        <td>{{ $invoice->details->Value_VAT }}</td>
-                                        <td>{{ $invoice->details->Total }}</td>
+                                        <td>{{ $invoice->details?->discount }}</td>
+                                        <td>{{ $invoice->details?->rate_vat }}</td>
+                                        <td>{{ $invoice->details?->value_vat }}</td>
+                                        <td>{{ $invoice->details?->total }}</td>
                                         {{-- <td>
                                             @if ($invoice->Value_Status == 1)
                                                 <span class="text-success">{{ $invoice->Status }}</span>
@@ -125,8 +123,12 @@
                                             @endif --}}
 
                                         {{-- </td> --}}
-                                            <td>{{ $invoice->details->status }}</td>
-                                        <td>{{ $invoice->details->note }}</td>
+                                        {{-- <td>{{ __($invoice->details?->status) }}</td>
+                                         --}}
+                                        <td class="{{ $invoice->details?->status === 'unpaid' ? 'text-warning' : '' }}">
+                                            {{ __('app.'.$invoice->details?->status) }}
+                                        </td>
+                                        <td>{{ $invoice->details?->note }}</td>
                                         <td>
                                             <div class="dropdown">
                                                 <button aria-expanded="false" aria-haspopup="true"
@@ -134,20 +136,21 @@
                                                     type="button">العمليات<i class="fas fa-caret-down ml-1"></i></button>
                                                 <div class="dropdown-menu tx-13">
                                                     {{-- @can('تعديل الفاتورة') --}}
-                                                        <a class="dropdown-item"
-                                                            href=" {{ url('edit_invoice') }}/{{ $invoice->id }}">تعديل
-                                                            الفاتورة</a>
+                                                    <a class="dropdown-item"
+                                                        href=" {{ url('edit_invoice') }}/{{ $invoice->id }}">تعديل
+                                                        الفاتورة</a>
                                                     {{-- @endcan --}}
 
                                                     {{-- @can('حذف الفاتورة') --}}
-                                                        <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
-                                                            data-toggle="modal" data-target="#delete_invoice"><i
-                                                                class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف
-                                                            الفاتورة</a>
+                                                    <a class="dropdown-item" href="#"
+                                                        data-invoice_id="{{ $invoice->id }}" data-toggle="modal"
+                                                        data-target="#delete_invoice"><i
+                                                            class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف
+                                                        الفاتورة</a>
                                                     {{-- @endcan --}}
 
                                                     {{-- @can('تغير حالة الدفع') --}}
-                                                        {{-- <a class="dropdown-item"
+                                                    {{-- <a class="dropdown-item"
                                                             href="{{ URL::route('Status_show', [$invoice->id]) }}"><i
                                                                 class=" text-success fas
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     fa-money-bill"></i>&nbsp;&nbsp;تغير
@@ -156,14 +159,14 @@
                                                     {{-- @endcan --}}
 
                                                     {{-- @can('ارشفة الفاتورة') --}}
-                                                        {{-- <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
+                                                    {{-- <a class="dropdown-item" href="#" data-invoice_id="{{ $invoice->id }}"
                                                             data-toggle="modal" data-target="#Transfer_invoice"><i
                                                                 class="text-warning fas fa-exchange-alt"></i>&nbsp;&nbsp;نقل الي
                                                             الارشيف</a> --}}
                                                     {{-- @endcan --}}
 
                                                     {{-- @can('طباعةالفاتورة') --}}
-                                                        {{-- <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
+                                                    {{-- <a class="dropdown-item" href="Print_invoice/{{ $invoice->id }}"><i
                                                                 class="text-success fas fa-print"></i>&nbsp;&nbsp;طباعة
                                                             الفاتورة
                                                         </a> --}}
@@ -260,7 +263,6 @@
             var modal = $(this)
             modal.find('.modal-body #invoice_id').val(invoice_id);
         })
-
     </script>
 
     <script>
@@ -270,6 +272,5 @@
             var modal = $(this)
             modal.find('.modal-body #invoice_id').val(invoice_id);
         })
-
     </script>
 @endsection
