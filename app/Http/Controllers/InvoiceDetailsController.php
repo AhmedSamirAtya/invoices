@@ -54,9 +54,20 @@ class InvoiceDetailsController extends Controller
     public function edit(InvoiceDetails $invoiceDetails)
     {
         $attachments  = InvoiceAttachment::where('invoice_id',$invoiceDetails->invoice_id)->get();
-
         return view('invoice.invoice_details',compact('invoiceDetails','attachments'));
 
+    }
+
+    public function downLoadFile($invoice_number,$file_name)
+    {
+        $path = public_path('Attachments/'.$invoice_number.'/'.$file_name);
+        return response()->download($path);
+    }
+
+    public function openFile($invoice_number,$file_name)
+    {
+        $path = public_path('Attachments/'.$invoice_number.'/'.$file_name);
+        return response()->file($path);
     }
 
     /**

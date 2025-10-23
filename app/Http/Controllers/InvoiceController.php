@@ -59,18 +59,17 @@ class InvoiceController extends Controller
         ]);
 
         if ($request->hasFile('pic')) {
-            $image = $request->file('pic');
-            $file_name = $image->getClientOriginalName();
             $invoice_number = $request->invoice_number;
 
             $attachments = new InvoiceAttachment();
-            $attachments->file_name = $file_name;
             $attachments->invoice_id = $invoice->id;
+            $imageName = uniqid() . '.' . $request->pic->getClientOriginalExtension();
+            $attachments->file_name = $imageName;
             $attachments->save();
 
             // move pic
             //$imageName = $request->pic->getClientOriginalName();
-            $imageName = uniqid() . '.' . $request->pic->getClientOriginalExtension();
+
             $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
         }
 

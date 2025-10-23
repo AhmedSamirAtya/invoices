@@ -17,6 +17,8 @@ Route::resource('invoices', InvoiceController::class);
 Route::resource('products', ProductController::class);
 Route::get('section/{id}', [InvoiceController::class, 'getproducts']);
 Route::get('InvoicesDetails/{invoiceDetails}', [InvoiceDetailsController::class, 'edit']);
+Route::get('view_file/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'openFile']);
+Route::get('download/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'downLoadFile']);
 Route::get('/{page}', [AdminController::class, 'index']);
 
 Route::get('/', function () {

@@ -197,13 +197,12 @@
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <form action="{{ route('invoices.destroy', 'test') }}" method="post">
+                    <form action="" method="POST">
                         {{ method_field('delete') }}
                         {{ csrf_field() }}
                 </div>
                 <div class="modal-body">
                     هل انت متاكد من عملية الحذف ؟
-                    <input type="hidden" name="invoice_id" id="invoice_id" value="">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
@@ -261,6 +260,7 @@
             var button = $(event.relatedTarget)
             var invoice_id = button.data('invoice_id')
             var modal = $(this)
+            modal.find('form').attr('action', '/invoices/' + invoice_id);
             modal.find('.modal-body #invoice_id').val(invoice_id);
         })
     </script>

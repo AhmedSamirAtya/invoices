@@ -97,7 +97,7 @@
                                                             <th scope="row">تاريخ الاستحقاق</th>
                                                             <td>{{ $invoiceDetails->due_date }}</td>
                                                             <th scope="row">القسم</th>
-                                                            <td>{{ $invoiceDetails->invoice->section->section_name }}</td>
+                                                            <td>{{ $invoiceDetails->invoice->section->name }}</td>
                                                         </tr>
 
                                                         <tr>
@@ -139,7 +139,7 @@
 
                                         <div class="tab-pane" id="tab5">
                                             <div class="table-responsive mt-15">
-                                                {{-- <table class="table center-aligned-table mb-0 table-hover"
+                                                <table class="table center-aligned-table mb-0 table-hover"
                                                     style="text-align:center">
                                                     <thead>
                                                         <tr class="text-dark">
@@ -156,34 +156,34 @@
                                                     </thead>
                                                     <tbody>
                                                         <?php $i = 0; ?>
-                                                        @foreach ($details as $x)
+                                                        @foreach ($invoiceDetails as $x)
                                                             <?php $i++; ?>
                                                             <tr>
                                                                 <td>{{ $i }}</td>
                                                                 <td>{{ $x->invoice_number }}</td>
-                                                                <td>{{ $x->product }}</td>
-                                                                <td>{{ $invoices->Section->section_name }}</td>
-                                                                @if ($x->Value_Status == 1)
+                                                                <td>{{ $x->invoice->product }}</td>
+                                                                <td>{{ $x->invoice->section->name }}</td>
+                                                                @if ($x->status != 'unpaid')
                                                                     <td><span
-                                                                            class="badge badge-pill badge-success">{{ $x->Status }}</span>
+                                                                            class="badge badge-pill badge-success">{{ $x->status }}</span>
                                                                     </td>
                                                                 @elseif($x->Value_Status == 2)
                                                                     <td><span
-                                                                            class="badge badge-pill badge-danger">{{ $x->Status }}</span>
+                                                                            class="badge badge-pill badge-danger">{{ $x->status }}</span>
                                                                     </td>
                                                                 @else
                                                                     <td><span
-                                                                            class="badge badge-pill badge-warning">{{ $x->Status }}</span>
+                                                                            class="badge badge-pill badge-warning">{{ $x->status }}</span>
                                                                     </td>
                                                                 @endif
-                                                                <td>{{ $x->Payment_Date }}</td>
+                                                                <td>{{ $x->payment_date }}</td>
                                                                 <td>{{ $x->note }}</td>
                                                                 <td>{{ $x->created_at }}</td>
-                                                                <td>{{ $x->user }}</td>
+                                                                <td>{{ $x->invoice->user }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>
-                                                </table> --}}
+                                                </table>
 
 
                                             </div>
@@ -241,13 +241,13 @@
                                                                     <td colspan="2">
 
                                                                         <a class="btn btn-outline-success btn-sm"
-                                                                            href="{{ url('View_file') }}/{{ $invoices->invoice_number }}/{{ $attachment->file_name }}"
+                                                                            href="{{ url('view_file') }}/{{ $invoiceDetails->invoice_number }}/{{ $attachment->file_name }}"
                                                                             role="button"><i
                                                                                 class="fas fa-eye"></i>&nbsp;
                                                                             عرض</a>
 
                                                                         <a class="btn btn-outline-info btn-sm"
-                                                                            href="{{ url('download') }}/{{ $invoices->invoice_number }}/{{ $attachment->file_name }}"
+                                                                            href="{{ url('download') }}/{{ $invoiceDetails->invoice_number }}/{{ $attachment->file_name }}"
                                                                             role="button"><i
                                                                                 class="fas fa-download"></i>&nbsp;
                                                                             تحميل</a>
@@ -296,7 +296,8 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="{{ route('delete_file') }}" method="post">
+                {{-- <form action="{{ route('delete_file') }}" method="post"> --}}
+                    <form action="" method="post">
 
                     {{ csrf_field() }}
                     <div class="modal-body">
