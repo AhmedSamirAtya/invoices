@@ -37,25 +37,25 @@
     @endif
 
 
-    {{-- @if (session()->has('Add')) --}}
+    @if (session()->has('Add'))
     <div class="alert alert-success alert-dismissible fade show" role="alert">
         <strong>{{ session()->get('Add') }}</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    {{-- @endif --}}
+    @endif
 
 
 
-    {{-- @if (session()->has('delete')) --}}
+    @if (session()->has('delete'))
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
         <strong>{{ session()->get('delete') }}</strong>
         <button type="button" class="close" data-dismiss="alert" aria-label="Close">
             <span aria-hidden="true">&times;</span>
         </button>
     </div>
-    {{-- @endif --}}
+    @endif
 
 
 
@@ -99,7 +99,6 @@
                                                             <th scope="row">القسم</th>
                                                             <td>{{ $invoiceDetails->invoice->section->name }}</td>
                                                         </tr>
-
                                                         <tr>
                                                             <th scope="row">المنتج</th>
                                                             <td>{{ $invoiceDetails->invoice->product->name }}</td>
@@ -110,8 +109,6 @@
                                                             <th scope="row">الخصم</th>
                                                             <td>{{ $invoiceDetails->discount }}</td>
                                                         </tr>
-
-
                                                         <tr>
                                                             <th scope="row">نسبة الضريبة</th>
                                                             <td>{{ $invoiceDetails->rate_vat }}</td>
@@ -120,11 +117,17 @@
                                                             <th scope="row">الاجمالي مع الضريبة</th>
                                                             <td>{{ $invoiceDetails->total }}</td>
                                                             <th scope="row">الحالة الحالية</th>
-
-                                                            <td
-                                                                class="{{ $invoiceDetails?->status === 'unpaid' ? 'text-warning' : '' }}">
-                                                                {{ __('app.' . $invoiceDetails?->status) }}
+                                                            @if ($invoiceDetails?->invoice->isPaid())
+                                                                <td
+                                                                class="text-success">
+                                                                {{ __('app.paid') }}
                                                             </td>
+                                                            @else
+                                                                 <td
+                                                                class="text-danger">
+                                                                {{ __('app.unpaid') }}
+                                                            </td>
+                                                            @endif
                                                         </tr>
 
                                                         <tr>
@@ -144,42 +147,22 @@
                                                     <thead>
                                                         <tr class="text-dark">
                                                             <th>#</th>
-                                                            <th>رقم الفاتورة</th>
-                                                            <th>نوع المنتج</th>
-                                                            <th>القسم</th>
-                                                            <th>حالة الدفع</th>
-                                                            <th>تاريخ الدفع </th>
+                                                            <th>المبلغ</th>
+                                                            <th>تاريخ الدفع</th>
+                                                            <th>طريقة الدفع</th>
                                                             <th>ملاحظات</th>
-                                                            <th>تاريخ الاضافة </th>
-                                                            <th>المستخدم</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
                                                         <?php $i = 0; ?>
-                                                        @foreach ($invoiceDetails as $x)
+                                                        @foreach ($invoiceDetails->invoice->payments as $x)
                                                             <?php $i++; ?>
                                                             <tr>
                                                                 <td>{{ $i }}</td>
-                                                                <td>{{ $x->invoice_number }}</td>
-                                                                <td>{{ $x->invoice->product }}</td>
-                                                                <td>{{ $x->invoice->section->name }}</td>
-                                                                @if ($x->status != 'unpaid')
-                                                                    <td><span
-                                                                            class="badge badge-pill badge-success">{{ $x->status }}</span>
-                                                                    </td>
-                                                                @elseif($x->Value_Status == 2)
-                                                                    <td><span
-                                                                            class="badge badge-pill badge-danger">{{ $x->status }}</span>
-                                                                    </td>
-                                                                @else
-                                                                    <td><span
-                                                                            class="badge badge-pill badge-warning">{{ $x->status }}</span>
-                                                                    </td>
-                                                                @endif
-                                                                <td>{{ $x->payment_date }}</td>
+                                                                <td>{{ $x->amount }}</td>
+                                                                <td>{{ $x->paid_at }}</td>
+                                                                <td>{{ $x->method }}</td>
                                                                 <td>{{ $x->note }}</td>
-                                                                <td>{{ $x->created_at }}</td>
-                                                                <td>{{ $x->invoice->user }}</td>
                                                             </tr>
                                                         @endforeach
                                                     </tbody>

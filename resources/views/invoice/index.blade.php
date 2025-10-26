@@ -85,8 +85,9 @@
                                     <th class="border-bottom-0">الخصم</th>
                                     <th class="border-bottom-0">نسبة الضريبة</th>
                                     <th class="border-bottom-0">قيمة الضريبة</th>
-                                    <th class="border-bottom-0">الاجمالي</th>
-                                    <th class="border-bottom-0">الحالة</th>
+                                    <th class="border-bottom-0">المبلغ المطلوب</th>
+                                    <th class="border-bottom-0">المدفوع</th>
+                                    <th class="border-bottom-0">اجمالى نسبه شركه التحصيل</th>
                                     <th class="border-bottom-0">ملاحظات</th>
                                     <th class="border-bottom-0">العمليات</th>
                                 </tr>
@@ -112,22 +113,9 @@
                                         <td>{{ $invoice->details?->discount }}</td>
                                         <td>{{ $invoice->details?->rate_vat }}</td>
                                         <td>{{ $invoice->details?->value_vat }}</td>
+                                        <td>{{ $invoice->details?->amount_collection }}</td>
+                                        <td>{{ $invoice->total_paid }}</td>
                                         <td>{{ $invoice->details?->total }}</td>
-                                        {{-- <td>
-                                            @if ($invoice->Value_Status == 1)
-                                                <span class="text-success">{{ $invoice->Status }}</span>
-                                            @elseif($invoice->Value_Status == 2)
-                                                <span class="text-danger">{{ $invoice->Status }}</span>
-                                            @else
-                                                <span class="text-warning">{{ $invoice->Status }}</span>
-                                            @endif --}}
-
-                                        {{-- </td> --}}
-                                        {{-- <td>{{ __($invoice->details?->status) }}</td>
-                                         --}}
-                                        <td class="{{ $invoice->details?->status === 'unpaid' ? 'text-warning' : '' }}">
-                                            {{ __('app.'.$invoice->details?->status) }}
-                                        </td>
                                         <td>{{ $invoice->details?->note }}</td>
                                         <td>
                                             <div class="dropdown">
@@ -147,6 +135,18 @@
                                                         data-target="#delete_invoice"><i
                                                             class="text-danger fas fa-trash-alt"></i>&nbsp;&nbsp;حذف
                                                         الفاتورة</a>
+
+                                                    @if (!$invoice->isPaid())
+                                                        <a class="dropdown-item" href="javascript:void(0)"
+                                                            data-invoice-id="{{ $invoice->id }}"
+                                                            data-amount="{{ $invoice->totalPaid }}"
+                                                            data-total="{{ $invoice->details?->amount_collection }}"
+                                                            data-toggle="modal" data-target="#pay_invoice">
+                                                            <i
+                                                                class="text-success fas fa-money-bill-wave"></i>&nbsp;&nbsp;دفع
+                                                            الفاتورة
+                                                        </a>
+                                                    @endif
                                                     {{-- @endcan --}}
 
                                                     {{-- @can('تغير حالة الدفع') --}}
@@ -214,6 +214,47 @@
     </div>
 
 
+
+
+    <div class="modal fade" id="pay_invoice" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">دفع الفاتورة</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="payInvoiceForm" action="{{ route('invoices.pay') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="invoice_id" id="invoice_id" value="">
+
+                        <div class="form-group">
+                            <label for="payment_amount">المبلغ المطلوب دفعه</label>
+                            <input type="number" name="amount" id="payment_amount" class="form-control"
+                                step="0.01" min="0.01" required>
+                            <small class="text-muted">
+                                الحد الأقصى للدفع: <span id="max_amount_display">0.00</span>
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="paid_at">تاريخ الدفع</label>
+                            <input type="date" name="paid_at" id="paid_at" class="form-control"
+                                value="{{ now()->format('Y-m-d') }}" required>
+                        </div>
+                         <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">الغاء</button>
+                    <button type="submit" class="btn btn-danger">{{ __('app.pay') }}</button>
+                </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
     <!-- ارشيف الفاتورة -->
     <div class="modal fade" id="Transfer_invoice" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
@@ -272,5 +313,27 @@
             var modal = $(this)
             modal.find('.modal-body #invoice_id').val(invoice_id);
         })
+    </script>
+
+    <script>
+        $(document).ready(function() {
+            $('#pay_invoice').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget); // Button that triggered the modal
+
+                var invoice_id = button.data('invoice-id'); // from data-invoice-id
+                var totalPaid = parseFloat(button.data('amount')) || 0; // already paid
+                var total = parseFloat(button.data('total')) || 0; // full amount
+
+                var maxPayable = Math.max(0, total - totalPaid); // never negative
+
+                var modal = $(this);
+                modal.find('.modal-body #invoice_id').val(invoice_id);
+                modal.find('.modal-body #payment_amount')
+                    .attr('max', maxPayable.toFixed(2))
+                    .val(''); // clear previous value
+
+                modal.find('#max_amount_display').text(maxPayable.toFixed(2));
+            });
+        });
     </script>
 @endsection

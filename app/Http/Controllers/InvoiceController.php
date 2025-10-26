@@ -20,7 +20,7 @@ class InvoiceController extends Controller
 {
     public function index(Request $request): View
     {
-        $invoices = Invoice::with(['details','product'])->get();
+        $invoices = Invoice::with(['details', 'product', 'payments'])->get();
 
         return view('invoice.index', compact('invoices'));
     }
@@ -37,7 +37,7 @@ class InvoiceController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $invoice =Invoice::create([
+        $invoice = Invoice::create([
             'product_id' => $request->product_id,
             'section_id' => $request->section_id,
             'user_id' => Auth::id(),
@@ -54,9 +54,15 @@ class InvoiceController extends Controller
             'value_vat' => $request->value_vat,
             'rate_vat' => $request->rate_vat,
             'total' => $request->total,
-            'status' => 'unpaid',
             'note' => $request->note,
         ]);
+
+        // $invoice->payments()->create([
+        //     'amount'  => $request->amount,
+        //     'paid_at' => $request->paid_at,
+        //     'method'  => $request->method,
+        //     'notes'   => $request->notes,
+        // ]);
 
         if ($request->hasFile('pic')) {
             $invoice_number = $request->invoice_number;
@@ -74,8 +80,8 @@ class InvoiceController extends Controller
         }
 
 
-           // $user = User::first();
-           // Notification::send($user, new AddInvoice($invoice_id));
+        // $user = User::first();
+        // Notification::send($user, new AddInvoice($invoice_id));
 
         // $user = User::get();
         // $invoices = Invoice::latest()->first();
@@ -85,6 +91,32 @@ class InvoiceController extends Controller
 
         session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
         return back();
+    }
+
+    public function pay(Request $request)
+    {
+        $request->validate([
+            'invoice_id' => 'required|exists:invoices,id',
+            'amount'     => 'required|numeric|min:0.01',
+            'paid_at'    => 'required|date',
+        ]);
+
+        $invoice = Invoice::with('details')->findOrFail($request->invoice_id);
+
+        $balance = $invoice->details?->amount_collection - $invoice->totalPaid;
+
+        if ($request->amount > $balance) {
+            return back()->withErrors([
+                'amount' => 'المبلغ المدخل يتجاوز المبلغ المتبقي للدفع.'
+            ]);
+        }
+        $invoice->payments()->create([
+            'amount'  => $request->amount,
+            'paid_at' => $request->paid_at,
+            'method'  => $request->method,
+            'notes'   => $request->notes,
+        ]);
+        // Create payment...
     }
 
     /**

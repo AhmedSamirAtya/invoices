@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 
 class Invoice extends Model
 {
@@ -35,6 +36,45 @@ class Invoice extends Model
 
     public function details(){
         return $this->hasOne(\App\Models\InvoiceDetails::class, 'invoice_id', 'id');
+    }
+
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+     // Computed total paid
+    public function totalPaid(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => $this->payments->sum('amount')
+        );
+    }
+
+    // Computed status
+    public function status(): Attribute
+    {
+        return Attribute::make(
+            get: function () {
+                $paid = $this->totalPaid;
+
+                if ($paid == 0) {
+                    return 'unpaid';
+                } elseif ($paid < $this->amount) {
+                    return 'partially_paid';
+                } elseif ($paid == $this->amount) {
+                    return 'paid';
+                } else {
+                    return 'overpaid';
+                }
+            }
+        );
+    }
+
+    // Helper: is fully paid?
+    public function isPaid(): bool
+    {
+        return $this->status === 'paid' || $this->status === 'overpaid';
     }
 
 }
