@@ -117,19 +117,10 @@
                                                             <th scope="row">الاجمالي مع الضريبة</th>
                                                             <td>{{ $invoiceDetails->total }}</td>
                                                             <th scope="row">الحالة الحالية</th>
-                                                            @if ($invoiceDetails?->invoice->isPaid())
-                                                                <td
-                                                                class="text-success">
-                                                                {{ __('app.paid') }}
+                                                                <td class="{{ $invoiceDetails?->invoice?->isPaid() ? 'text-success' : 'text-danger' }}">
+                                                                {{ __($invoiceDetails?->invoice->status) }}
                                                             </td>
-                                                            @else
-                                                                 <td
-                                                                class="text-danger">
-                                                                {{ __('app.unpaid') }}
-                                                            </td>
-                                                            @endif
                                                         </tr>
-
                                                         <tr>
                                                             <th scope="row">ملاحظات</th>
                                                             <td>{{ $invoiceDetails->note }}</td>
@@ -176,7 +167,7 @@
                                         <div class="tab-pane" id="tab6">
                                             <!--المرفقات-->
                                             <div class="card card-statistics">
-                                                @can('اضافة مرفق')
+                                                {{-- @can('اضافة مرفق') --}}
                                                     <div class="card-body">
                                                         <p class="text-danger">* صيغة المرفق pdf, jpeg ,.jpg , png </p>
                                                         <h5 class="card-title">اضافة مرفقات</h5>
@@ -187,9 +178,9 @@
                                                                 <input type="file" class="custom-file-input" id="customFile"
                                                                     name="file_name" required>
                                                                 <input type="hidden" id="customFile" name="invoice_number"
-                                                                    value="{{ $invoices->invoice_number }}">
+                                                                    value="{{ $invoiceDetails->invoice->invoice_number }}">
                                                                 <input type="hidden" id="invoice_id" name="invoice_id"
-                                                                    value="{{ $invoices->id }}">
+                                                                    value="{{ $invoiceDetails->invoice->id }}">
                                                                 <label class="custom-file-label" for="customFile">حدد
                                                                     المرفق</label>
                                                             </div><br><br>
@@ -197,7 +188,7 @@
                                                                 name="uploadedFile">تاكيد</button>
                                                         </form>
                                                     </div>
-                                                @endcan
+                                                {{-- @endcan --}}
                                                 <br>
 
                                                 <div class="table-responsive mt-15">

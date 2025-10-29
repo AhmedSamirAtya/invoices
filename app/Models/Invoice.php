@@ -34,7 +34,8 @@ class Invoice extends Model
         return $this->belongsTo(\App\Models\User::class, 'user_id', 'id');
     }
 
-    public function details(){
+    public function details()
+    {
         return $this->hasOne(\App\Models\InvoiceDetails::class, 'invoice_id', 'id');
     }
 
@@ -43,7 +44,7 @@ class Invoice extends Model
         return $this->hasMany(Payment::class);
     }
 
-     // Computed total paid
+    // Computed total paid
     public function totalPaid(): Attribute
     {
         return Attribute::make(
@@ -60,9 +61,9 @@ class Invoice extends Model
 
                 if ($paid == 0) {
                     return 'unpaid';
-                } elseif ($paid < $this->amount) {
+                } elseif ($paid < $this->details?->amount_collection ?? 0) {
                     return 'partially_paid';
-                } elseif ($paid == $this->amount) {
+                } elseif ($paid == $this->details?->amount_collection) {
                     return 'paid';
                 } else {
                     return 'overpaid';
@@ -77,4 +78,8 @@ class Invoice extends Model
         return $this->status === 'paid' || $this->status === 'overpaid';
     }
 
+    public function attachments()
+    {
+        return $this->hasMany(InvoiceAttachment::class, 'invoice_id');
+    }
 }

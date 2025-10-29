@@ -12,8 +12,10 @@ use App\Models\Section;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 
 class InvoiceController extends Controller
@@ -113,15 +115,12 @@ class InvoiceController extends Controller
         $invoice->payments()->create([
             'amount'  => $request->amount,
             'paid_at' => $request->paid_at,
-            'method'  => $request->method,
-            'notes'   => $request->notes,
+            'method'  => $request->method ?? 'cash',
         ]);
-        // Create payment...
+        session()->flash('Add', 'تم الدفع الفاتورة بنجاح');
+        return back();
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function show($id): View
     {
         $invoice = Invoice::find($id);
@@ -129,22 +128,34 @@ class InvoiceController extends Controller
         return view('invoice.show', compact('invoice'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id): View
+    public function edit(int $id): View
     {
-        $invoice = Invoice::find($id);
-
-        return view('invoice.edit', compact('invoice'));
+        $invoice = Invoice::with(['details', 'section', 'product'])->findOrFail($id);
+        $sections = Section::all();
+        return view('invoice.edit', compact('invoice', 'sections'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(InvoiceRequest $request, Invoice $invoice): RedirectResponse
+    public function update(Request $request, Invoice $invoice): RedirectResponse
     {
-        $invoice->update($request->validated());
+         $invoice->update([
+            'product_id' => $request->product,
+            'section_id' => $request->section,
+            'user_id' => Auth::id(),
+        ]);
+
+        $invoice->details()->update([
+            'invoice_id' => $invoice->id,
+            'invoice_number' => $request->invoice_number,
+            'invoice_date' => $request->invoice_date,
+            'due_date' => $request->due_date,
+            'amount_collection' => $request->amount_collection,
+            'amount_commission' => $request->amount_commission,
+            'discount' => $request->discount,
+            'value_vat' => $request->value_vat,
+            'rate_vat' => $request->rate_vat,
+            'total' => $request->total,
+            'note' => $request->note,
+        ]);
 
         return Redirect::route('invoices.index')
             ->with('success', 'Invoice updated successfully');
@@ -152,10 +163,17 @@ class InvoiceController extends Controller
 
     public function destroy($id): RedirectResponse
     {
-        Invoice::find($id)->delete();
+        $invoice = Invoice::findOrFail($id);
 
-        return Redirect::route('invoices.index')
-            ->with('success', 'Invoice deleted successfully');
+        $folderPath = public_path('Attachments/' . $invoice->details?->invoice_number);
+
+        if (is_dir($folderPath)) {
+            File::deleteDirectory($folderPath);
+        }
+
+        $invoice->delete();
+
+        return Redirect::route('invoices.index')->with('success', 'تم حذف الفاتورة ومرفقاتها بنجاح.');
     }
 
     public function getproducts($id)

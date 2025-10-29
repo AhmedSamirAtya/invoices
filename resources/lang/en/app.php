@@ -45,4 +45,11 @@ return [
     'product' => 'Product',
     'unpaid' => 'Unpaid',
     'paid' => 'Paid',
+    'credit_card' => 'Credit Card',
+    'debit_card' => 'Debit Card',
+    'digital_wallet' => 'Digital Wallet',
+    'cash' => 'Cash',
+    'other' => 'Other',
+    'partially_paid' => 'Partially Paid',
+    'overpaid' => 'Overpaid',
 ];

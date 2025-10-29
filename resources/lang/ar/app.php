@@ -46,4 +46,11 @@ return [
     'product' => 'المنتج',
     'unpaid' => 'غير مدفوع',
     'paid' => 'مدفوع',
+    'credit_card' => 'بطاقة ائتمان',
+    'debit_card' => 'بطاقة خصم',
+    'digital_wallet' => 'محفظة رقمية',
+    'cash' => 'نقدي',
+    'other' => 'أخرى',
+    'partially_paid' => 'مدفوع جزئياً',
+    'overpaid' => 'مدفوع زيادة',
 ];

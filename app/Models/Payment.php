@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Payment extends Model
 {
     protected $fillable = [
-        'invoice_id', 'amount', 'paid_at', 'method', 'notes'
+        'invoice_id', 'amount', 'paid_at', 'method'
     ];
 
     protected $casts = [
