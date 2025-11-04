@@ -118,7 +118,7 @@
                                                             <td>{{ $invoiceDetails->total }}</td>
                                                             <th scope="row">الحالة الحالية</th>
                                                                 <td class="{{ $invoiceDetails?->invoice?->isPaid() ? 'text-success' : 'text-danger' }}">
-                                                                {{ __($invoiceDetails?->invoice->status) }}
+                                                                {{ __('app.'.$invoiceDetails?->invoice->status) }}
                                                             </td>
                                                         </tr>
                                                         <tr>

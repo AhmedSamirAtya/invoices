@@ -53,4 +53,5 @@ return [
     'other' => 'أخرى',
     'partially_paid' => 'مدفوع جزئياً',
     'overpaid' => 'مدفوع زيادة',
+    'pay' => 'ادفع'
 ];

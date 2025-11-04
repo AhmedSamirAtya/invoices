@@ -181,4 +181,10 @@ class InvoiceController extends Controller
         $products = DB::table("products")->where("section_id", $id)->pluck("name", "id");
         return json_encode($products);
     }
+
+    public function printInvoice($id): View
+    {
+        $invoice = Invoice::with(['details', 'product', 'section'])->findOrFail($id);
+        return view('invoice.print_invoice', compact('invoice'));
+    }
 }

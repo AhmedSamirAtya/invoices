@@ -23,6 +23,7 @@ Route::get('view_file/{invoice_number}/{file_name}', [InvoiceDetailsController::
 Route::get('download/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'downLoadFile']);
 Route::resource('InvoiceAttachments', InvoiceAttachmentsController::class);
 Route::get('/edit_invoice/{id}', [InvoiceController::class, 'edit']);
+Route::get('print_invoice/{id}', [InvoiceController::class, 'printInvoice']);
 Route::get('/{page}', [AdminController::class, 'index']);
 
 Route::get('/', function () {
