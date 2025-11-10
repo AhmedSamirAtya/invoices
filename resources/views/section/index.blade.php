@@ -153,6 +153,10 @@
                             <input class="form-control" name="name" id="name" type="text">
                         </div>
                         <div class="form-group">
+                            <label for="email" class="col-form-label">{{ __('app.email') }}:</label>
+                            <textarea class="form-control" id="email" name="email"></textarea>
+                        </div>
+                        <div class="form-group">
                             <label for="description" class="col-form-label">{{ __('app.description') }}:</label>
                             <textarea class="form-control" id="description" name="description"></textarea>
                         </div>
@@ -207,10 +211,12 @@
             var id = button.data('id')
             var name = button.data('name')
             var description = button.data('description')
+            var email = button.data('email')
             var modal = $(this)
             modal.find('form').attr('action', '/sections/' + id);
             modal.find('.modal-body #id').val(id);
             modal.find('.modal-body #name').val(name);
+            modal.find('.modal-body #email').val(email);
             modal.find('.modal-body #description').val(description);
         })
     </script>

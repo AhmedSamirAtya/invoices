@@ -10,6 +10,7 @@ use App\Models\InvoiceAttachment;
 use App\Models\InvoiceDetails;
 use App\Models\Section;
 use App\Models\User;
+use App\Exports\InvoicesExport;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
@@ -17,6 +18,7 @@ use Illuminate\Support\Facades\Notification;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
+use Rap2hpoutre\FastExcel\FastExcel;
 
 class InvoiceController extends Controller
 {
@@ -26,6 +28,38 @@ class InvoiceController extends Controller
 
         return view('invoice.index', compact('invoices'));
     }
+
+     public function export()
+    {
+
+       // Fetch the data you want to export
+        $invoiceDetails = InvoiceDetails::all();
+
+        // The keys of the collection items will become the column headers in the Excel file.
+        return (new FastExcel($invoiceDetails))->download('invoiceDetails.xlsx');
+
+    }
+
+    // public function import(Request $request)
+    // {
+    //     // Validate the uploaded file
+    //     $request->validate(['excel_file' => 'required|file|mimes:xlsx,xls,csv']);
+
+    //     $filePath = $request->file('excel_file');
+
+    //     // Read the spreadsheet into a collection
+    //     $sections = (new FastExcel)->import($filePath, function ($line) {
+    //         // $line is an array where keys are the column headers (e.g., 'name', 'email')
+    //         return Section::create([
+    //             'name' => $line['name'], // Ensure these keys match your Excel headers
+    //             'email' => $line['email'],
+    //             // ... other fields
+    //         ]);
+    //     });
+
+    //     return back()->with('success', 'Data imported successfully!');
+    // }
+
 
 
     public function create(): View
@@ -59,13 +93,6 @@ class InvoiceController extends Controller
             'note' => $request->note,
         ]);
 
-        // $invoice->payments()->create([
-        //     'amount'  => $request->amount,
-        //     'paid_at' => $request->paid_at,
-        //     'method'  => $request->method,
-        //     'notes'   => $request->notes,
-        // ]);
-
         if ($request->hasFile('pic')) {
             $invoice_number = $request->invoice_number;
 
@@ -85,9 +112,10 @@ class InvoiceController extends Controller
         // $user = User::first();
         // Notification::send($user, new AddInvoice($invoice_id));
 
-        // $user = User::get();
-        // $invoices = Invoice::latest()->first();
-        // Notification::send($user, new \App\Notifications\Add_invoice_new($invoices));
+        $invoice = Invoice::latest()->first();
+        $section = $invoice->section;
+
+        Notification::send($section, new \App\Notifications\InvoiceAdded($invoice->id));
 
         // event(new MyEventClass('hello world'));
 

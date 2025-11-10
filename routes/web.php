@@ -18,6 +18,7 @@ Route::resource('invoices', InvoiceController::class);
 Route::resource('products', ProductController::class);
 Route::get('section/{id}', [InvoiceController::class, 'getproducts']);
 Route::post('invoice-pay', [InvoiceController::class, 'pay'])->name('invoices.pay');
+Route::get('export_invoices', [InvoiceController::class, 'export']);
 Route::get('InvoicesDetails/{invoiceDetails}', [InvoiceDetailsController::class, 'edit']);
 Route::get('view_file/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'openFile']);
 Route::get('download/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'downLoadFile']);

@@ -51,9 +51,10 @@ class InvoiceDetailsController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(InvoiceDetails $invoiceDetails)
+    public function edit(int $invoiceId)
     {
-        $attachments  = InvoiceAttachment::where('invoice_id',$invoiceDetails->invoice_id)->get();
+        $attachments  = InvoiceAttachment::where('invoice_id',$invoiceId)->get();
+        $invoiceDetails = InvoiceDetails::where('invoice_id', $invoiceId)->first();
         return view('invoice.invoice_details',compact('invoiceDetails','attachments'));
 
     }

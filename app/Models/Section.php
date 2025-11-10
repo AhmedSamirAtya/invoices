@@ -2,7 +2,9 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Notifications\Notifiable;
 
 /**
  * Class Section
@@ -20,11 +22,11 @@ use Illuminate\Database\Eloquent\Model;
  */
 class Section extends Model
 {
-
+    use HasFactory, Notifiable;
     protected $perPage = 20;
 
 
-    protected $fillable = ['name', 'description', 'user_id'];
+    protected $fillable = ['name', 'description', 'email', 'user_id'];
 
 
 

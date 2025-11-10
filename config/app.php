@@ -1,5 +1,8 @@
 <?php
 
+use Carbon\Laravel\ServiceProvider;
+use Illuminate\Support\Facades\Facade;
+
 return [
 
     /*
@@ -104,6 +107,15 @@ return [
             explode(',', (string) env('APP_PREVIOUS_KEYS', ''))
         ),
     ],
+
+    // 'providers' => ServiceProvider::defaultProviders()->merge([
+    //     Maatwebsite\Excel\ExcelServiceProvider::class,
+    // ])->toArray(),
+
+    // 'aliases' => Facade::defaultAliases()->merge([
+    //     'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    // ])->toArray(),
+
 
     /*
     |--------------------------------------------------------------------------

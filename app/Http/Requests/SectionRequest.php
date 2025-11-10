@@ -23,6 +23,7 @@ class SectionRequest extends FormRequest
     {
         return [
 			'name' => 'required|string',
+            'email' => 'required|email|unique:sections,email',
             'description' => 'nullable|string',
             'created_by' => 'nullable|string|max:999',
         ];
