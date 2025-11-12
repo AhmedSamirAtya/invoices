@@ -6,6 +6,8 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\InvoiceDetailsController;
+use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 Auth::routes(/*['register' => false]*/);
@@ -25,6 +27,16 @@ Route::get('download/{invoice_number}/{file_name}', [InvoiceDetailsController::c
 Route::resource('InvoiceAttachments', InvoiceAttachmentsController::class);
 Route::get('/edit_invoice/{id}', [InvoiceController::class, 'edit']);
 Route::get('print_invoice/{id}', [InvoiceController::class, 'printInvoice']);
+
+
+
+Route::middleware(['role:admin'])->group(function () {
+    Route::resource('roles',RoleController::class);
+    Route::resource('users', UserController::class);
+});
+
+
+
 Route::get('/{page}', [AdminController::class, 'index']);
 
 Route::get('/', function () {
