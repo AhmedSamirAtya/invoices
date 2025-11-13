@@ -22,6 +22,31 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'delete invoice']);
         Permission::create(['name' => 'edit invoice']);
 
+        Permission::create(['name' => 'create report']);
+        Permission::create(['name' => 'show reports']);
+        Permission::create(['name' => 'delete report']);
+        Permission::create(['name' => 'edit report']);
+
+        Permission::create(['name' => 'create section']);
+        Permission::create(['name' => 'show sections']);
+        Permission::create(['name' => 'delete section']);
+        Permission::create(['name' => 'edit section']);
+
+        Permission::create(['name' => 'create product']);
+        Permission::create(['name' => 'show products']);
+        Permission::create(['name' => 'delete product']);
+        Permission::create(['name' => 'edit product']);
+
+        Permission::create(['name' => 'create user']);
+        Permission::create(['name' => 'show users']);
+        Permission::create(['name' => 'delete user']);
+        Permission::create(['name' => 'edit user']);
+
+        Permission::create(['name' => 'create role']);
+        Permission::create(['name' => 'show roles']);
+        Permission::create(['name' => 'delete role']);
+        Permission::create(['name' => 'edit role']);
+
         // Get all created permissions
         $allPermissions = Permission::all();
 
@@ -30,7 +55,7 @@ class RolesAndPermissionsSeeder extends Seeder
         $adminRole = Role::create(['name' => 'admin']);
 
         // 3. Assign permissions to roles
-        $collectorRole->givePermissionTo('create invoice', 'show invoices');
+        $collectorRole->givePermissionTo('create invoice', 'show invoices', 'create report', 'show reports', 'create section', 'show sections', 'create product', 'show products');
 
         // Assign ALL permissions to the admin role
         $adminRole->givePermissionTo($allPermissions);

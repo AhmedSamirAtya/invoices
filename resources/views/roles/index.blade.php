@@ -1,10 +1,9 @@
-
 @extends('layouts.master')
 @section('css')
     <!--Internal   Notify -->
     <link href="{{ URL::asset('assets/plugins/notify/css/notifIt.css') }}" rel="stylesheet" />
 @section('title')
-    صلاحيات المستخدمين - مورا سوفت للادارة القانونية
+    صلاحيات المستخدمين - مورا سوفت للادارة
 @stop
 
 
@@ -32,7 +31,6 @@
                 type: "success"
             });
         }
-
     </script>
 @endif
 
@@ -44,7 +42,6 @@
                 type: "success"
             });
         }
-
     </script>
 @endif
 
@@ -56,7 +53,6 @@
                 type: "error"
             });
         }
-
     </script>
 @endif
 
@@ -68,7 +64,7 @@
                 <div class="d-flex justify-content-between">
                     <div class="col-lg-12 margin-tb">
                         <div class="pull-right">
-                            @can('اضافة صلاحية')
+                            @can('create role')
                                 <a class="btn btn-primary btn-sm" href="{{ route('roles.create') }}">اضافة</a>
                             @endcan
                         </div>
@@ -93,22 +89,30 @@
                                     <td>{{ ++$i }}</td>
                                     <td>{{ $role->name }}</td>
                                     <td>
-                                        @can('عرض صلاحية')
+                                        @can('show roles')
                                             <a class="btn btn-success btn-sm"
                                                 href="{{ route('roles.show', $role->id) }}">عرض</a>
                                         @endcan
 
-                                        @can('تعديل صلاحية')
+                                        @can('edit role')
                                             <a class="btn btn-primary btn-sm"
                                                 href="{{ route('roles.edit', $role->id) }}">تعديل</a>
                                         @endcan
 
-                                        @if ($role->name !== 'owner')
-                                            @can('حذف صلاحية')
-                                                {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy',
+                                        @if ($role->name !== 'admin')
+                                            @can('delete role')
+                                                {{-- {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy',
                                                 $role->id], 'style' => 'display:inline']) !!}
                                                 {!! Form::submit('حذف', ['class' => 'btn btn-danger btn-sm']) !!}
-                                                {!! Form::close() !!}
+                                                {!! Form::close() !!} --}}
+                                                <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
+                                                    style="display:inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-danger btn-sm">
+                                                        حذف
+                                                    </button>
+                                                </form>
                                             @endcan
                                         @endif
 

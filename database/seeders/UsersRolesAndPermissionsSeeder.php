@@ -16,7 +16,11 @@ class UsersRolesAndPermissionsSeeder extends Seeder
      */
     public function run(): void
     {
-        $admin = User::find(1);
+        $admin = User::create([
+            "name" => "admin",
+            "email" => "admin@invoices.com",
+            "password" => Hash::make("12345678")
+        ]);
         $admin->assignRole('admin');
 
         $collector = User::create([
@@ -24,7 +28,6 @@ class UsersRolesAndPermissionsSeeder extends Seeder
             "email" => "collector@invoices.com",
             "password" => Hash::make("12345678")
         ]);
-
         $collector->assignRole('collector');
     }
 }
