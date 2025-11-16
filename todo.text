@@ -1,1 +1,2 @@
 1. we need to make gaurd for sections as(banks, companies) as we have users they are (invoices collectors for these sections)
+2. any section should have email the email is the same email for this section reviewer so system can send email to this reviewer

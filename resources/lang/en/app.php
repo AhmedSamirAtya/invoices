@@ -52,4 +52,6 @@ return [
     'other' => 'Other',
     'partially_paid' => 'Partially Paid',
     'overpaid' => 'Overpaid',
+    'active' => 'active',
+    'inactive' => 'inactive'
 ];

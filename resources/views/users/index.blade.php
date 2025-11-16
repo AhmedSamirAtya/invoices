@@ -44,7 +44,7 @@
         <div class="card">
             <div class="card-header pb-0">
                 <div class="col-sm-1 col-md-2">
-                    @can('اضافة مستخدم')
+                    @can('create user')
                         <a class="btn btn-primary btn-sm" href="{{ route('users.create') }}">اضافة مستخدم</a>
                     @endcan
                 </div>
@@ -71,11 +71,11 @@
                                     <td>
                                         @if ($user->is_active)
                                             <span class="label text-success d-flex">
-                                                <div class="dot-label bg-success ml-1"></div>{{ $user->is_active }}
+                                                <div class="dot-label bg-success ml-1"></div>{{ __('app.active') }}
                                             </span>
                                         @else
                                             <span class="label text-danger d-flex">
-                                                <div class="dot-label bg-danger ml-1"></div>{{ $user->is_active }}
+                                                <div class="dot-label bg-danger ml-1"></div>{{ __('app.inactive') }}
                                             </span>
                                         @endif
                                     </td>

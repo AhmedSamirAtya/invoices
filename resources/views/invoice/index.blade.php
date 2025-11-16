@@ -117,6 +117,7 @@
                                         <td>{{ $invoice->total_paid }}</td>
                                         <td>{{ $invoice->details?->total }}</td>
                                         <td>{{ $invoice->details?->note }}</td>
+                                         @can('edit invoice')
                                         <td>
                                             <div class="dropdown">
                                                 <button aria-expanded="false" aria-haspopup="true"
@@ -166,15 +167,19 @@
                                                     {{-- @endcan --}}
 
                                                     {{-- @can('طباعةالفاتورة') --}}
-                                                    <a class="dropdown-item" href="print_invoice/{{ $invoice->id }}"><i
+
+                                                       <a class="dropdown-item" href="print_invoice/{{ $invoice->id }}"><i
                                                                 class="text-success fas fa-print"></i>&nbsp;&nbsp;طباعة
                                                             الفاتورة
                                                         </a>
+
+
                                                     {{-- @endcan --}}
                                                 </div>
                                             </div>
 
                                         </td>
+                                        @endcan
                                     </tr>
                                 @endforeach
 

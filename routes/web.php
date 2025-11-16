@@ -10,35 +10,38 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+
 Auth::routes(/*['register' => false]*/);
 
 
 
 //Route::get('/home', [App\Http\Controllers\AdminController::class, 'index'])->name('home');
-Route::resource('sections', SectionController::class);
-Route::resource('invoices', InvoiceController::class);
-Route::resource('products', ProductController::class);
-Route::get('section/{id}', [InvoiceController::class, 'getproducts']);
-Route::post('invoice-pay', [InvoiceController::class, 'pay'])->name('invoices.pay');
-Route::get('export_invoices', [InvoiceController::class, 'export']);
-Route::get('InvoicesDetails/{invoiceDetails}', [InvoiceDetailsController::class, 'edit']);
-Route::get('view_file/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'openFile']);
-Route::get('download/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'downLoadFile']);
-Route::resource('InvoiceAttachments', InvoiceAttachmentsController::class);
-Route::get('/edit_invoice/{id}', [InvoiceController::class, 'edit']);
-Route::get('print_invoice/{id}', [InvoiceController::class, 'printInvoice']);
+Route::middleware(['auth', 'is_active'])->group(function () {
+    Route::resource('sections', SectionController::class);
+    Route::resource('invoices', InvoiceController::class);
+    Route::resource('products', ProductController::class);
+    Route::get('section/{id}', [InvoiceController::class, 'getproducts']);
+    Route::post('invoice-pay', [InvoiceController::class, 'pay'])->name('invoices.pay');
+    Route::get('export_invoices', [InvoiceController::class, 'export']);
+    Route::get('InvoicesDetails/{invoiceDetails}', [InvoiceDetailsController::class, 'edit']);
+    Route::get('view_file/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'openFile']);
+    Route::get('download/{invoice_number}/{file_name}', [InvoiceDetailsController::class, 'downLoadFile']);
+    Route::resource('InvoiceAttachments', InvoiceAttachmentsController::class);
+    Route::get('/edit_invoice/{id}', [InvoiceController::class, 'edit']);
+    Route::get('print_invoice/{id}', [InvoiceController::class, 'printInvoice']);
 
 
 
-Route::middleware(['role:admin'])->group(function () {
-    Route::resource('roles',RoleController::class);
-    Route::resource('users', UserController::class);
-});
+    Route::middleware(['role:admin'])->group(function () {
+        Route::resource('roles', RoleController::class);
+        Route::resource('users', UserController::class);
+    });
 
 
 
-Route::get('/{page}', [AdminController::class, 'index']);
+    Route::get('/{page}', [AdminController::class, 'index']);
 
-Route::get('/', function () {
-    return view('auth.login');
+    Route::get('/', function () {
+        return view('auth.login');
+    });
 });

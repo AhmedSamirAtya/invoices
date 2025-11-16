@@ -113,6 +113,10 @@
                             <label for="exampleInputEmail1">{{ __('app.name') }}</label>
                             <input type="text" class="form-control" id="name" name="name">
                         </div>
+                         <div class="form-group">
+                            <label for="email" class="col-form-label">{{ __('app.email') }}:</label>
+                            <input class="form-control" id="email" name="email" type="text"></input>
+                        </div>
 
                         <div class="form-group">
                             <label for="exampleFormControlTextarea1">{{ __('app.description') }}</label>
@@ -154,7 +158,7 @@
                         </div>
                         <div class="form-group">
                             <label for="email" class="col-form-label">{{ __('app.email') }}:</label>
-                            <textarea class="form-control" id="email" name="email"></textarea>
+                            <input class="form-control" id="email" name="email" type="text"></input>
                         </div>
                         <div class="form-group">
                             <label for="description" class="col-form-label">{{ __('app.description') }}:</label>
