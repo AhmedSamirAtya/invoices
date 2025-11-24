@@ -6,6 +6,7 @@ use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\SectionController;
 use App\Http\Controllers\InvoiceDetailsController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
@@ -35,6 +36,10 @@ Route::middleware(['auth', 'is_active'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::resource('roles', RoleController::class);
         Route::resource('users', UserController::class);
+        Route::get('invoices_report', [ReportController::class, 'invoicesReport']);
+        Route::post('search_invoices', [ReportController::class, 'searchInvoices']);
+        Route::get('customers_report', [ReportController::class, 'customersReport'])->name("customers_report");
+        Route::post('search_customers', [ReportController::class, 'searchCustomers']);
     });
 
 

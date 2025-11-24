@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Casts\Attribute;
+use Illuminate\Database\Eloquent\Builder;
 
 class Invoice extends Model
 {
@@ -82,4 +83,54 @@ class Invoice extends Model
     {
         return $this->hasMany(InvoiceAttachment::class, 'invoice_id');
     }
+
+    public static function getTotalFullyUnpaidAmount(): float
+    {
+        $paymentsTable = (new \App\Models\Payment())->getTable();
+        $detailsTable = (new \App\Models\InvoiceDetails())->getTable();
+        //$paiedInvoices = self::isPaid()->get();
+        // The sub-query logic (required for filtering)
+        $fullyUnpaidFilter = '
+        IFNULL((SELECT SUM(amount) FROM ' . $paymentsTable . ' WHERE ' . $paymentsTable . '.invoice_id = invoices.id), 0) = 0
+    ';
+
+        // Build the query
+        return (float) self::query()
+            // 1. Join InvoiceDetails to access the amount_collection column
+            ->join($detailsTable, 'invoices.id', '=', $detailsTable . '.invoice_id')
+
+            // 2. Filter: Only include invoices with zero payments
+            ->whereRaw($fullyUnpaidFilter)
+
+            // 3. Filter: Only include invoices with a charge amount
+            ->where($detailsTable . '.amount_collection', '>', 0)
+
+            // 4. Perform the sum on the column from the joined table
+            ->sum($detailsTable . '.amount_collection');
+    }
+
+   public static function getTotalPaidAmount(): float
+{
+    $paymentsTable = (new \App\Models\Payment())->getTable();
+    $detailsTable = (new \App\Models\InvoiceDetails())->getTable();
+
+    // SQL condition for 'paid' status:
+    // IFNULL(SUM of payments) must equal amount_collection.
+    $fullyPaidFilter = '
+        IFNULL((SELECT SUM(amount) FROM ' . $paymentsTable . ' WHERE ' . $paymentsTable . '.invoice_id = invoices.id), 0) = ' . $detailsTable . '.amount_collection
+    ';
+
+    return (float) self::query()
+        // 1. Join InvoiceDetails to access the amount_collection column
+        ->join($detailsTable, 'invoices.id', '=', $detailsTable . '.invoice_id')
+
+        // 2. Filter: Only include invoices where total payments equals the amount collected
+        ->whereRaw($fullyPaidFilter)
+
+        // 3. Optional: Filter out invoices with zero collection amount (though payment filter should cover this)
+        ->where($detailsTable . '.amount_collection', '>', 0)
+
+        // 4. Perform the sum on the column from the joined table
+        ->sum($detailsTable . '.amount_collection');
+}
 }

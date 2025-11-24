@@ -60,13 +60,12 @@ class Kernel extends HttpKernel
         'can' => \Illuminate\Auth\Middleware\Authorize::class,
         'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
-
+        'is_active' => \App\Http\Middleware\IsActive::class,
         // --- ADD THE SPATIE MIDDLEWARE HERE ---
         'role' => \Spatie\Permission\Middleware\RoleMiddleware::class,
         'permission' => \Spatie\Permission\Middleware\PermissionMiddleware::class,
         'role_or_permission' => \Spatie\Permission\Middleware\RoleOrPermissionMiddleware::class,
-        // --------------------------------------
-        'is_active' => \App\Http\Middleware\IsActive::class,
+
     ];
 
     /**
