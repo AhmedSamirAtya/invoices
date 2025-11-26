@@ -114,10 +114,20 @@ class InvoiceController extends Controller
 
         $invoice = Invoice::latest()->first();
         $section = $invoice->section;
-
+        $admin = User::find(1);
+        //notify by email
         Notification::send($section, new \App\Notifications\InvoiceAdded($invoice->id));
-
+        //notify by database
+        $details = [
+            'body' => 'تم اضافة فاتورة جديدة برقم :' . ' ' . $invoice->details->invoice_number,
+            'invoice_id' => $invoice->id,
+            'invoice_number' => $invoice->details->invoice_number,
+            'section_name' => $section->name,
+            'sender_id' => Auth::id(),
+        ];
+        Notification::send($admin, new \App\Notifications\notify_add_invoice_to_database($details));
         // event(new MyEventClass('hello world'));
+
 
         session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
         return back();

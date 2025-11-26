@@ -53,5 +53,8 @@ return [
     'partially_paid' => 'Partially Paid',
     'overpaid' => 'Overpaid',
     'active' => 'active',
-    'inactive' => 'inactive'
+    'inactive' => 'inactive',
+    'paid_invoices_percentage' => 'Paid Invoices Percentage',
+    'unpaid_invoices_percentage' => 'Unpaid Invoices Percentage',
+    'partialy_paid_invoices_percentage' => 'Partially Paid Invoices Percentage',
 ];

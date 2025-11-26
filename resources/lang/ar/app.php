@@ -56,6 +56,9 @@ return [
     'pay' => 'ادفع',
     'partially_paid' => 'مدفوع جزئياً',
     'active' => 'مفعل',
-    'inactive' => 'غير مفعل'
+    'inactive' => 'غير مفعل',
+    'paid_invoices_percentage' => 'نسبة الفواتير المدفوعة',
+    'unpaid_invoices_percentage' => 'نسبة الفواتير غير المدفوعة',
+    'partialy_paid_invoices_percentage' => 'نسبة الفواتير المدفوعة جزئياً',
 
 ];
