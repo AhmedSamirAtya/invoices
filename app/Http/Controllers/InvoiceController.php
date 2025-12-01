@@ -108,10 +108,6 @@ class InvoiceController extends Controller
             $request->pic->move(public_path('Attachments/' . $invoice_number), $imageName);
         }
 
-
-        // $user = User::first();
-        // Notification::send($user, new AddInvoice($invoice_id));
-
         $invoice = Invoice::latest()->first();
         $section = $invoice->section;
         $admin = User::find(1);
@@ -126,8 +122,6 @@ class InvoiceController extends Controller
             'sender_id' => Auth::id(),
         ];
         Notification::send($admin, new \App\Notifications\notify_add_invoice_to_database($details));
-        // event(new MyEventClass('hello world'));
-
 
         session()->flash('Add', 'تم اضافة الفاتورة بنجاح');
         return back();

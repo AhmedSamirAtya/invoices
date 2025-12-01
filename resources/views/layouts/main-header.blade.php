@@ -3,6 +3,8 @@
         ->whereNull('read_at')
         ->orderBy('created_at', 'desc')
         ->get();
+        $unreadNotificatons = Auth::user()->unreadNotifications->count();
+        //dd($databaseNotifications[0]->data);
 @endphp
 
 
@@ -168,24 +170,28 @@
 								<div class="dropdown-menu">
 									<div class="menu-header-content bg-primary text-right">
 										<div class="d-flex">
-											<h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">Notifications</h6>
+											<h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{ trans('app.notifications')}}</h6><span class="badge badge-pill badge-warning mr-auto my-auto float-left">{{trans('app.mark_all_as_read')}}</span>
 										</div>
-										<p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">You have {{count($databaseNotifications)}} unread Notifications</p>
+										<p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">{{$unreadNotificatons}} - {{ trans('app.unread_notificaons')}} </p>
 									</div>
-									<div class="main-notification-list Notification-scroll">
+									@foreach ($databaseNotifications as $notification)
+
+                                        <div class="main-notification-list Notification-scroll">
 										<a class="d-flex p-3 border-bottom" href="#">
 											<div class="notifyimg bg-pink">
 												<i class="la la-file-alt text-white"></i>
 											</div>
 											<div class="mr-3">
-												<h5 class="notification-label mb-1">New files available</h5>
-												<div class="notification-subtext">10 hour ago</div>
+                                                <h3 class="notification-label mb-1">{{ $notification->data['section_name'] }}</h3>
+												<h3 class="notification-label mb-1">{{ $notification->data['body'] }}</h3>
+												<div class="notification-subtext">{{ $notification->created_at }}</div>
 											</div>
 											<div class="mr-auto" >
 												<i class="las la-angle-left text-left text-muted"></i>
 											</div>
 										</a>
 									</div>
+                                    @endforeach
 									<div class="dropdown-footer">
 										<a href="">VIEW ALL</a>
 									</div>

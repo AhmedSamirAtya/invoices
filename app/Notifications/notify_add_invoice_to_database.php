@@ -35,8 +35,8 @@ class notify_add_invoice_to_database extends Notification
 
     public function toDatabase(object $notifiable)
     {
-        return [
-            'data' => $this->details['body']
-        ];
+        return
+             $this->details
+        ;
     }
 }
