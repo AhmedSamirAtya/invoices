@@ -12,9 +12,8 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
+
 Auth::routes(/*['register' => false]*/);
-
-
 
 //Route::get('/home', [App\Http\Controllers\AdminController::class, 'index'])->name('home');
 Route::middleware(['auth', 'is_active'])->group(function () {
@@ -33,7 +32,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
 
 
 
-    Route::middleware(['role:admin'])->group(function () {
+    Route::middleware([\Spatie\Permission\Middleware\RoleMiddleware::class . ':admin'])->group(function () {
         Route::resource('roles', RoleController::class);
         Route::resource('users', UserController::class);
         Route::get('invoices_report', [ReportController::class, 'invoicesReport']);

@@ -5,8 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Permission as SpatiePermissio;
+use Spatie\Permission\Models\Role as SpatieRole;
 
 class RoleController extends Controller
 {
@@ -20,10 +20,10 @@ class RoleController extends Controller
 function __construct()
 {
 
-$this->middleware('permission:show roles', ['only' => ['index']]);
-$this->middleware('permission:create role', ['only' => ['create','store']]);
-$this->middleware('permission:edit role', ['only' => ['edit','update']]);
-$this->middleware('permission:delete role', ['only' => ['destroy']]);
+// $this->middleware('permission:show roles', ['only' => ['index']]);
+// $this->middleware('permission:create role', ['only' => ['create','store']]);
+// $this->middleware('permission:edit role', ['only' => ['edit','update']]);
+// $this->middleware('permission:delete role', ['only' => ['destroy']]);
 
 }
 
@@ -37,7 +37,7 @@ $this->middleware('permission:delete role', ['only' => ['destroy']]);
      */
     public function index(Request $request)
     {
-        $roles = Role::orderBy('id', 'DESC')->paginate(5);
+        $roles = SpatieRole::orderBy('id', 'DESC')->paginate(5);
         return view('roles.index', compact('roles'))
             ->with('i', ($request->input('page', 1) - 1) * 5);
     }
@@ -48,7 +48,7 @@ $this->middleware('permission:delete role', ['only' => ['destroy']]);
      */
     public function create()
     {
-        $permission = Permission::get();
+        $permission = SpatiePermissio::get();
         return view('roles.create', compact('permission'));
     }
     /**
@@ -63,7 +63,7 @@ $this->middleware('permission:delete role', ['only' => ['destroy']]);
             'name' => 'required|unique:roles,name',
             'permission' => 'required',
         ]);
-        $role = Role::create(['name' => $request->input('name')]);
+        $role = SpatieRole::create(['name' => $request->input('name')]);
         $role->syncPermissions($request->input('permission'));
         return redirect()->route('roles.index')
             ->with('success', 'Role created successfully');
@@ -76,8 +76,8 @@ $this->middleware('permission:delete role', ['only' => ['destroy']]);
      */
     public function show($id)
     {
-        $role = Role::find($id);
-        $rolePermissions = Permission::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
+        $role = SpatieRole::find($id);
+        $rolePermissions = SpatiePermissio::join("role_has_permissions", "role_has_permissions.permission_id", "=", "permissions.id")
             ->where("role_has_permissions.role_id", $id)
             ->get();
         return view('roles.show', compact('role', 'rolePermissions'));
@@ -90,8 +90,8 @@ $this->middleware('permission:delete role', ['only' => ['destroy']]);
      */
     public function edit($id)
     {
-        $role = Role::find($id);
-        $permission = Permission::get();
+        $role = SpatieRole::find($id);
+        $permission = SpatiePermissio::get();
         $rolePermissions = DB::table("role_has_permissions")->where("role_has_permissions.role_id", $id)
             ->pluck('role_has_permissions.permission_id', 'role_has_permissions.permission_id')
             ->all();
@@ -110,7 +110,7 @@ $this->middleware('permission:delete role', ['only' => ['destroy']]);
             'name' => 'required',
             'permission' => 'required',
         ]);
-        $role = Role::find($id);
+        $role = SpatieRole::find($id);
         $role->name = $request->input('name');
         $role->save();
         $role->syncPermissions($request->input('permission'));
