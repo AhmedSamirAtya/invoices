@@ -52,7 +52,6 @@
                         <div class="col-xs-7 col-sm-7 col-md-7">
                             <div class="form-group">
                                 <p>اسم الصلاحية :</p>
-                                {{-- CONVERSION: Form::text('name', null, array('class' => 'form-control')) --}}
                                 <input type="text" name="name" value="{{ old('name') }}" class="form-control">
                             </div>
                         </div>
@@ -65,10 +64,7 @@
                                         {{-- The outer <li> was closed prematurely, fixed here --}}
                                         @foreach($permission as $value)
                                             <label style="font-size: 16px;">
-                                                {{-- CONVERSION: Form::checkbox('permission[]', $value->id, false, array('class' => 'name')) --}}
                                                 <input type="checkbox" name="permission[]" value="{{ $value->name }}" class="name">
-
-                                                {{-- Display the permission name --}}
                                                 {{ $value->name }}
                                             </label>
                                         @endforeach

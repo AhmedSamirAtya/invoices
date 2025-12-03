@@ -45,7 +45,7 @@ Route::middleware(['auth', 'is_active'])->group(function () {
 
     Route::get('/{page}', [AdminController::class, 'index']);
 
-    Route::get('/', function () {
-        return view('auth.login');
-    });
+    // Route::get('/', function () {
+    //     return view('auth.login');
+    // });
 });

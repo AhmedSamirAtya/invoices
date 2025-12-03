@@ -101,8 +101,8 @@
                             <div class="form-group">
                                 <label class="form-label"> صلاحية المستخدم</label>
                                 <select class="form-control" multiple name="roles_name[]">
-                                    @foreach ($roles as $roleId => $roleName)
-                                        <option value="{{ $roleId }}">{{ $roleName }}</option>
+                                    @foreach ($roles as $role)
+                                        <option value="{{ $role->id }}">{{ $role->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

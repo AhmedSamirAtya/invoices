@@ -101,10 +101,6 @@
 
                                         @if ($role->name !== 'admin')
                                             @can('delete role')
-                                                {{-- {!! Form::open(['method' => 'DELETE', 'route' => ['roles.destroy',
-                                                $role->id], 'style' => 'display:inline']) !!}
-                                                {!! Form::submit('حذف', ['class' => 'btn btn-danger btn-sm']) !!}
-                                                {!! Form::close() !!} --}}
                                                 <form method="POST" action="{{ route('roles.destroy', $role->id) }}"
                                                     style="display:inline">
                                                     @csrf
