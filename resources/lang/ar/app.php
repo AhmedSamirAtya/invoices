@@ -60,5 +60,6 @@ return [
     'paid_invoices_percentage' => 'نسبة الفواتير المدفوعة',
     'unpaid_invoices_percentage' => 'نسبة الفواتير غير المدفوعة',
     'partialy_paid_invoices_percentage' => 'نسبة الفواتير المدفوعة جزئياً',
+    'please_enter_commission_amount' => 'يرجي ادخال مبلغ العمولة'
 
 ];

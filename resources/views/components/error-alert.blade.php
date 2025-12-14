@@ -3,7 +3,7 @@
 @if ($errors->any())
     <div class="alert alert-danger">
         {{-- Use a heading for better visibility --}}
-        <h4 class="alert-heading">Whoops! There were some errors.</h4>
+        <h4 class="alert-heading">{{__app("app.errors")}}.</h4>
         <ul>
             @foreach ($errors->all() as $error)
                 <li>{{ $error }}</li>

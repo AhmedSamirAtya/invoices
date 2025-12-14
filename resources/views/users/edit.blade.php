@@ -5,6 +5,8 @@
 <link href="{{URL::asset('assets/plugins/jquery-nice-select/css/nice-select.css')}}" rel="stylesheet" />
 @section('title')
 تعديل مستخدم - مورا سوفت للادارة
+
+@trans("app.title")
 @stop
 
 
@@ -14,8 +16,7 @@
 <div class="breadcrumb-header justify-content-between">
     <div class="my-auto">
         <div class="d-flex">
-            <h4 class="content-title mb-0 my-auto">المستخدمين</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/ تعديل
-                مستخدم</span>
+            <h4 class="content-title mb-0 my-auto">{{__("app.users")}}</h4><span class="text-muted mt-1 tx-13 mr-2 mb-0">/{{__("app.edit_user")}}</span>
         </div>
     </div>
 </div>
@@ -81,7 +82,7 @@
 
                     <div class="row row-sm mg-b-20">
                         <div class="col-lg-6">
-                            <label class="form-label">حالة المستخدم</label>
+                            <label class="form-label">{{__("app.status")}}</label>
                             <select name="is_active" id="select-beast" class="form-control  nice-select  custom-select">
                                 <option value="{{ $user->is_active }}">{{ $user->is_active }}</option>
                                 <option value="1">{{__('app.active')}}</option>
@@ -93,7 +94,7 @@
                     <div class="row mg-b-20">
                         <div class="col-xs-12 col-sm-12 col-md-12">
                             <div class="form-group">
-                                <strong>نوع المستخدم</strong>
+                                <strong>{{__("app.type")}}</strong>
                                 <select name="roles[]" class="form-control" multiple>
                                     @foreach($roles as $role)
                                         <option value="{{ $role->name }}" @if(in_array($role->id, $userRole)) selected @endif>{{ $role->name }}</option>
