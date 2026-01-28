@@ -173,8 +173,9 @@
 										<div class="d-flex">
 											<h6 class="dropdown-title mb-1 tx-15 text-white font-weight-semibold">{{ trans('app.notifications')}}</h6><span class="badge badge-pill badge-warning mr-auto my-auto float-left">{{trans('app.mark_all_as_read')}}</span>
 										</div>
-										<p class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">{{$unreadNotificatons}} - {{ trans('app.unread_notificaons')}} </p>
+										<p id="notifications_count" class="dropdown-title-text subtext mb-0 text-white op-6 pb-0 tx-12 ">{{$unreadNotificatons}} - {{ trans('app.unread_notificaons')}} </p>
 									</div>
+                                    <div id="unread_notifications">
 									@foreach ($databaseNotifications as $notification)
 
                                         <div class="main-notification-list Notification-scroll">
@@ -193,6 +194,7 @@
 										</a>
 									</div>
                                     @endforeach
+                                    </div>
 									<div class="dropdown-footer">
 										<a href="">VIEW ALL</a>
 									</div>
